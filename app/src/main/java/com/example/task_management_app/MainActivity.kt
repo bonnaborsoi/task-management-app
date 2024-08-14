@@ -19,8 +19,39 @@ import com.example.task_management_app.ui.theme.TaskmanagementappTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.task_management_app.domain.usecase.CreateTask
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var createTask: CreateTask
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val firebaseService = FirebaseService()
+        val taskRepository = TaskRepositoryImpl(firebaseService)
+        createTask = CreateTask(taskRepository)
+
+        // Cria uma nova task e a adiciona ao Firebase
+        val newTask = Task(
+            id = null,
+            name = "Tigrinho",
+            dueDate = System.currentTimeMillis(),
+            isCompleted = false,
+            isMarkedOnCalendar = true
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val taskId = createTask(newTask) // Usando o caso de uso CreateTask
+                Log.d("MainActivity", "Task adicionada com sucesso! ID: $taskId")
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Erro ao adicionar task", e)
+            }
+        }
+    }
+}
+/*class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -75,4 +106,4 @@ fun GreetingPreview() {
     TaskmanagementappTheme {
         Greeting("Android")
     }
-}
+}*/

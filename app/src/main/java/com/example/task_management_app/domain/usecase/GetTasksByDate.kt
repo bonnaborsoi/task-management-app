@@ -2,10 +2,11 @@ package com.example.task_management_app.domain.usecase
 
 import com.example.task_management_app.data.model.Task
 import com.example.task_management_app.data.repository.TaskRepository
+import kotlinx.coroutines.flow.Flow
 
-class CreateTask(private val taskRepository: TaskRepository) {
-    suspend operator fun invoke(task: Task): String {
+class GetTasksByDate(private val taskRepository: TaskRepository) {
+    operator fun invoke(date: Long): Flow<List<Task>> {
         // Adiciona lógica de negócios específica aqui, se necessário
-        return taskRepository.addTask(task)
+        return taskRepository.getTasksByDate(date)
     }
 }
