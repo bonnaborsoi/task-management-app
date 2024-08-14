@@ -1,6 +1,7 @@
 package com.example.task_management_app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,16 +12,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.task_management_app.data.firebase.FirebaseService
+import com.example.task_management_app.data.model.Task
+import com.example.task_management_app.data.repository.TaskRepositoryImpl
 import com.example.task_management_app.ui.theme.TaskmanagementappTheme
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val database = Firebase.database
-        val myRef = database.getReference("message")
-        myRef.setValue("Hello, World (again)!")
 
         enableEdgeToEdge()
         setContent {
@@ -31,6 +33,29 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
+            }
+        }
+
+        // Cria uma instância de FirebaseService e TaskRepositoryImpl
+        val firebaseService = FirebaseService()
+        val taskRepository = TaskRepositoryImpl(firebaseService)
+
+        // Cria uma nova task e a adiciona ao Firebase
+        val newTask = Task(
+            id = null, // O ID será gerado pelo Firebase
+            name = "Test Task",
+            dueDate = System.currentTimeMillis(), // Define a data atual como data de expiração
+            isCompleted = false,
+            isMarkedOnCalendar = true
+        )
+
+        // Utiliza coroutines para fazer operações com o repositório
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val taskId = taskRepository.addTask(newTask) // Adiciona a task ao Firebase
+                Log.d("MainActivity", "Task adicionada com sucesso! ID: $taskId")
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Erro ao adicionar task", e)
             }
         }
     }
