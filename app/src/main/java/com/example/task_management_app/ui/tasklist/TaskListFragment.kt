@@ -14,6 +14,7 @@ import com.example.task_management_app.data.firebase.FirebaseService
 import com.example.task_management_app.data.repository.TaskRepositoryImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
 
 class TaskListFragment : Fragment() {
 
@@ -30,7 +31,7 @@ class TaskListFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Inicialização de GetAllTasks
-        val taskRepository = TaskRepositoryImpl(FirebaseService())
+        val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
         getAllTasks = GetAllTasks(taskRepository)
     }
 

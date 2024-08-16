@@ -17,7 +17,7 @@ fun TaskCard(task: Task, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Data de Expiração: ${task.dueDate}")
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = if (task.isCompleted) "Concluída" else "Pendente")
+            Text(text = if (task.completed) "Concluída" else "Pendente")
         }
     }
 }

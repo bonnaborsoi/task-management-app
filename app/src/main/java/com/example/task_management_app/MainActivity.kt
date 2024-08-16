@@ -2,29 +2,16 @@ package com.example.task_management_app
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.task_management_app.data.firebase.FirebaseService
 import com.example.task_management_app.data.model.Task
 import com.example.task_management_app.data.repository.TaskRepositoryImpl
-import com.example.task_management_app.ui.theme.TaskmanagementappTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.task_management_app.domain.usecase.CreateTask
 import androidx.fragment.app.commit
 import com.example.task_management_app.ui.tasklist.TaskListFragment
-import android.widget.CalendarView
-import android.widget.CalendarView.OnDateChangeListener
 import com.example.task_management_app.domain.usecase.EditTask
 import com.example.task_management_app.domain.usecase.DeleteTask
 import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
@@ -39,19 +26,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // VERIFICAR SE FUNCIONA!!!!
         val firebaseService = FirebaseService()
-        val taskRepository = TaskRepositoryImpl(firebaseService)
+        val calendarDayRepository = CalendarDayRepositoryImpl(firebaseService)
+        val taskRepository = TaskRepositoryImpl(firebaseService, calendarDayRepository)
         createTask = CreateTask(taskRepository)
         editTask = EditTask(taskRepository)
         deleteTask = DeleteTask(taskRepository)
 
         // Cria uma nova task e a adiciona ao Firebase
-        val newTask = Task(
+        /*val newTask = Task(
             id = null,
-            name = "Suki",
+            name = "Lucca",
             dueDate = System.currentTimeMillis(),
-            isCompleted = false,
-            isMarkedOnCalendar = true
+            Completed = false,
+            markedOnCalendar = true
         )
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -61,8 +50,23 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao adicionar task", e)
             }
-        }
+        }*/
+        val id_delete : String = "-O4EEax5J_Ppp_3jy2yq"
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
 
+                // Deleta a task recém-criada
+                val deleteSuccess = deleteTask(id_delete)
+                if (deleteSuccess) {
+                    Log.d("MainActivity", "Task deletada com sucesso! ID: $id_delete")
+                } else {
+                    Log.e("MainActivity", "Falha ao deletar a task com ID: $id_delete")
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Erro ao adicionar ou deletar task", e)
+            }
+        }
+        /*
         dayRepository = CalendarDayRepositoryImpl(firebaseService)
 
         // Teste de createDay
@@ -111,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao recuperar dias após modificação", e)
             }
-        }
+        }*/
         /*editar task
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -184,7 +188,7 @@ class MainActivity : AppCompatActivity() {
             id = null, // O ID será gerado pelo Firebase
             name = "Test Task",
             dueDate = System.currentTimeMillis(), // Define a data atual como data de expiração
-            isCompleted = false,
+            Completed = false,
             isMarkedOnCalendar = true
         )
 
