@@ -6,4 +6,7 @@ data class Task(
     val dueDate: Long,
     val isCompleted: Boolean = false,
     val isMarkedOnCalendar: Boolean = false
-)
+){
+    // Construtor sem argumentos necessário para o Firebase
+    constructor() : this("", "", 0L, false, false)
+}

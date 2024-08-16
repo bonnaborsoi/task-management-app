@@ -8,17 +8,31 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.task_management_app.databinding.FragmentTaskListBinding
-import com.example.task_management_app.ui.components.TaskCard
+import com.example.task_management_app.domain.usecase.GetAllTasks
+import com.example.task_management_app.data.firebase.FirebaseService
+import com.example.task_management_app.data.repository.TaskRepositoryImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class TaskListFragment : Fragment() {
 
-    private val viewModel: TaskListViewModel by viewModels()
+    private lateinit var getAllTasks: GetAllTasks
+
+    private val viewModel: TaskListViewModel by viewModels {
+        TaskListViewModelFactory(getAllTasks)
+    }
+
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Inicialização de GetAllTasks
+        val taskRepository = TaskRepositoryImpl(FirebaseService())
+        getAllTasks = GetAllTasks(taskRepository)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

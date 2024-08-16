@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         val firebaseService = FirebaseService()
         val taskRepository = TaskRepositoryImpl(firebaseService)
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         // Cria uma nova task e a adiciona ao Firebase
         val newTask = Task(
             id = null,
-            name = "Tigrinho",
+            name = "Suki",
             dueDate = System.currentTimeMillis(),
             isCompleted = false,
             isMarkedOnCalendar = true
