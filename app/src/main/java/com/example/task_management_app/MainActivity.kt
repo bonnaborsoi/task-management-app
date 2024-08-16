@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -20,8 +21,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.task_management_app.domain.usecase.CreateTask
+import androidx.fragment.app.commit
+import com.example.task_management_app.ui.tasklist.TaskListFragment
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var createTask: CreateTask
 
@@ -47,6 +50,12 @@ class MainActivity : ComponentActivity() {
                 Log.d("MainActivity", "Task adicionada com sucesso! ID: $taskId")
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao adicionar task", e)
+            }
+        }
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                replace(R.id.fragment_container, TaskListFragment())
             }
         }
     }
