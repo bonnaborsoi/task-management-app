@@ -16,6 +16,7 @@ import com.example.task_management_app.domain.usecase.EditTask
 import com.example.task_management_app.domain.usecase.DeleteTask
 import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
 import com.example.task_management_app.ui.calendar.CalendarFragment
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,14 +36,37 @@ class MainActivity : AppCompatActivity() {
         editTask = EditTask(taskRepository)
         deleteTask = DeleteTask(taskRepository)
 
-        // Cria uma nova task e a adiciona ao Firebase
+        // Define uma função para obter o início do dia
+        fun getStartOfDay(timestamp: Long): Long {
+            val calendar = Calendar.getInstance().apply {
+                timeInMillis = timestamp
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            return calendar.timeInMillis
+        }
+
+// Cria uma nova task e a adiciona ao Firebase
+        val currentTimestamp = System.currentTimeMillis()
+        val startOfDayTimestamp = getStartOfDay(currentTimestamp) // Ajusta para o início do dia
+
         val newTask = Task(
+            id = null,
+            name = "Lucca",
+            dueDate = startOfDayTimestamp, // Usa o timestamp ajustado
+            completed = false,
+            markedOnCalendar = true
+        )
+        // Cria uma nova task e a adiciona ao Firebase
+        /*val newTask = Task(
             id = null,
             name = "Lucca",
             dueDate = System.currentTimeMillis(),
             completed = false,
             markedOnCalendar = true
-        )
+        )*/
 
         CoroutineScope(Dispatchers.IO).launch {
             try {

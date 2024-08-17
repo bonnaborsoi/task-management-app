@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import com.example.task_management_app.data.firebase.FirebaseService
 import com.example.task_management_app.data.model.Day
+import java.util.Calendar
 
 class CalendarDayRepositoryImpl(
     private val firebaseService: FirebaseService
@@ -16,7 +17,8 @@ class CalendarDayRepositoryImpl(
 
     override suspend fun incrementDay(date: Long): Boolean {
         return try {
-            val dayRef = databaseReference.child(date.toString())
+            val startOfDay = getStartOfDay(date)
+            val dayRef = databaseReference.child(startOfDay.toString())
             val daySnapshot = dayRef.get().await()
 
             if (daySnapshot.exists()) {
@@ -26,7 +28,7 @@ class CalendarDayRepositoryImpl(
                     dayRef.setValue(it).await()
                 }
             } else {
-                val newDay = Day(date = date, quantity = 1)
+                val newDay = Day(date = startOfDay, quantity = 1)
                 dayRef.setValue(newDay).await()
             }
             true
@@ -37,7 +39,8 @@ class CalendarDayRepositoryImpl(
 
     override suspend fun decrementDay(date: Long): Boolean {
         return try {
-            val dayRef = databaseReference.child(date.toString())
+            val startOfDay = getStartOfDay(date)
+            val dayRef = databaseReference.child(startOfDay.toString())
             val daySnapshot = dayRef.get().await()
 
             if (daySnapshot.exists()) {
@@ -55,6 +58,17 @@ class CalendarDayRepositoryImpl(
         } catch (e: Exception) {
             false
         }
+    }
+
+    private fun getStartOfDay(dateInMillis: Long): Long {
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = dateInMillis
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        return calendar.timeInMillis
     }
 
     override fun getAllDays(): Flow<List<Day>> = flow {

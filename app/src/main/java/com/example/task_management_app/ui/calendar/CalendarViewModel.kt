@@ -1,5 +1,6 @@
 package com.example.task_management_app.ui.calendar
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.task_management_app.data.model.Day
@@ -16,6 +17,7 @@ class CalendarViewModel(
 
     val days: StateFlow<List<Day>> = currentDate.flatMapLatest { date ->
         getAllDays().map { highlightedDays ->
+            Log.d("CalendarViewModel", "Highlighted Days: $highlightedDays")
             generateMonthDays(date, highlightedDays)
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())

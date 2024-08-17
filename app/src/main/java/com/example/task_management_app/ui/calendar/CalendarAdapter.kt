@@ -1,5 +1,6 @@
 package com.example.task_management_app.ui.calendar
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,16 +23,6 @@ class CalendarAdapter(
         return DayViewHolder(view)
     }
 
-    private fun isCurrentDay(dateInMillis: Long?): Boolean {
-        dateInMillis ?: return false
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = dateInMillis
-
-        val today = Calendar.getInstance()
-        return calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-                calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
-    }
-
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
         val day = dayList.getOrNull(position)
         holder.bind(day, onDayClicked)
@@ -50,45 +41,60 @@ class CalendarAdapter(
 
         fun bind(day: Day?, onDayClicked: (Day) -> Unit) {
             day?.let {
-                // Extrair o dia do mês a partir do timestamp em milissegundos
                 val calendar = Calendar.getInstance().apply { timeInMillis = it.date }
                 val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
                 val isCurrentDay = isCurrentDay(it.date)
                 val isHighlightedDay = it.quantity > 0
 
+                // Adicionando logs para depuração
+                Log.d("CalendarAdapter", "Bind ViewHolder - Day: $dayOfMonth, DateInMillis: ${it.date}, IsCurrentDay: $isCurrentDay, IsHighlightedDay: $isHighlightedDay")
+
                 if (isCurrentDay) {
-                    // Destacar o dia atual
                     viewCircle.visibility = View.VISIBLE
-                    if (isHighlightedDay) {
-                        dayText.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark))
-                    } else {
-                        dayText.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.white))
-                    }
-                } else if (isHighlightedDay) {
-                    // Destacar o dia que está em 'days'
-                    viewCircle.visibility = View.GONE
-                    dayText.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark))
+                    dayText.setTextColor(
+                        if (isHighlightedDay) {
+                            ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark)
+                        } else {
+                            ContextCompat.getColor(itemView.context, android.R.color.white)
+                        }
+                    )
                 } else {
-                    // Dia normal
                     viewCircle.visibility = View.GONE
-                    dayText.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.black))
+                    dayText.setTextColor(
+                        if (isHighlightedDay) {
+                            ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark)
+                        } else {
+                            ContextCompat.getColor(itemView.context, android.R.color.black)
+                        }
+                    )
                 }
 
-                // Exibir o dia do mês na UI
                 dayText.text = dayOfMonth.toString()
-
                 itemView.setOnClickListener { onDayClicked(day) }
             }
         }
 
         private fun isCurrentDay(dateInMillis: Long): Boolean {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = dateInMillis
+            val calendar = Calendar.getInstance().apply { timeInMillis = dateInMillis }
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
 
-            val today = Calendar.getInstance()
-            return calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-                    calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+            val today = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+
+            val isCurrent = calendar.timeInMillis == today.timeInMillis
+
+            // Adicionando log para depuração
+            Log.d("CalendarAdapter", "Is Current Day - DateInMillis: $dateInMillis, Result: $isCurrent")
+
+            return isCurrent
         }
     }
 }
