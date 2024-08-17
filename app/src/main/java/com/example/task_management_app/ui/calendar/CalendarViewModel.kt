@@ -14,8 +14,11 @@ class CalendarViewModel(
     private val _currentDate = MutableStateFlow(Calendar.getInstance().timeInMillis)
     val currentDate: StateFlow<Long> = _currentDate.asStateFlow()
 
-    val days: StateFlow<List<Day>> = getAllDays()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    val days: StateFlow<List<Day>> = currentDate.flatMapLatest { date ->
+        getAllDays().map { highlightedDays ->
+            generateMonthDays(date, highlightedDays)
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun goToNextMonth() {
         _currentDate.value = Calendar.getInstance().apply {
@@ -29,5 +32,32 @@ class CalendarViewModel(
             timeInMillis = currentDate.value
             add(Calendar.MONTH, -1)
         }.timeInMillis
+    }
+
+    private fun generateMonthDays(currentDate: Long, highlightedDays: List<Day>): List<Day> {
+        val calendar = Calendar.getInstance().apply { timeInMillis = currentDate }
+        val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        val totalDays = 42 // 6 semanas de exibição (7 dias por semana)
+
+        val monthDays = mutableListOf<Day>()
+        for (i in 0 until totalDays) {
+            if (i >= firstDayOfWeek && i < firstDayOfWeek + daysInMonth) {
+                val dayOfMonth = i - firstDayOfWeek + 1
+                val dayCalendar = Calendar.getInstance().apply {
+                    timeInMillis = currentDate
+                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                }
+                val dayInMillis = dayCalendar.timeInMillis
+
+                val day = highlightedDays.find { it.date == dayInMillis }
+                    ?: Day(date = dayInMillis, quantity = 0)
+                monthDays.add(day)
+            } else {
+                monthDays.add(Day(date = 0L, quantity = 0)) // Células vazias
+            }
+        }
+        return monthDays
     }
 }

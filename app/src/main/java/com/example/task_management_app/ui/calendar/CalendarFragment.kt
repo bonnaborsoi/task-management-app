@@ -51,6 +51,7 @@ class CalendarFragment : Fragment() {
         binding.calendarRecyclerView.layoutManager = GridLayoutManager(requireContext(), 7) // 7 colunas para os dias da semana
         binding.calendarRecyclerView.adapter = adapter
 
+        // Atualizar a lista de dias quando o mês é alterado
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.days.collectLatest { days ->
                 // Atualizar o adapter com os dias destacados
@@ -58,12 +59,26 @@ class CalendarFragment : Fragment() {
             }
         }
 
+        // Botões para navegar entre os meses
         binding.buttonNextMonth.setOnClickListener {
             viewModel.goToNextMonth()
+            refreshDays()
         }
 
         binding.buttonPreviousMonth.setOnClickListener {
             viewModel.goToPreviousMonth()
+            refreshDays()
+        }
+    }
+
+    // Função para atualizar os dias após alterar o mês
+    private fun refreshDays() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.days.collectLatest { days ->
+                binding.calendarRecyclerView.adapter?.let {
+                    (it as? CalendarAdapter)?.submitList(days)
+                }
+            }
         }
     }
 
