@@ -15,6 +15,7 @@ import com.example.task_management_app.ui.tasklist.TaskListFragment
 import com.example.task_management_app.domain.usecase.EditTask
 import com.example.task_management_app.domain.usecase.DeleteTask
 import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
+import com.example.task_management_app.ui.calendar.CalendarFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,11 +36,11 @@ class MainActivity : AppCompatActivity() {
         deleteTask = DeleteTask(taskRepository)
 
         // Cria uma nova task e a adiciona ao Firebase
-        /*val newTask = Task(
+        val newTask = Task(
             id = null,
             name = "Lucca",
             dueDate = System.currentTimeMillis(),
-            Completed = false,
+            completed = false,
             markedOnCalendar = true
         )
 
@@ -50,7 +51,8 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao adicionar task", e)
             }
-        }*/
+        }
+        /*
         val id_delete : String = "-O4EEax5J_Ppp_3jy2yq"
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -65,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao adicionar ou deletar task", e)
             }
-        }
+        }*/
         /*
         dayRepository = CalendarDayRepositoryImpl(firebaseService)
 
@@ -155,10 +157,15 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Erro ao adicionar ou deletar task", e)
             }
         }*/
-
+        /*
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 replace(R.id.fragment_container, TaskListFragment())
+            }
+        }*/
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                replace(R.id.fragment_container, CalendarFragment())
             }
         }
     }

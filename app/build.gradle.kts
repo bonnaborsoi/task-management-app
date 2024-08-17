@@ -82,6 +82,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.fragment.ktx)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
-
     //kapt("groupId:artifactId:version")
 }
