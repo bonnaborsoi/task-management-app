@@ -16,6 +16,18 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp" />
 
+    <CheckBox
+        android:id="@+id/cbFilterCompleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Completed" />
+
+    <CheckBox
+        android:id="@+id/cbFilterImportant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Important" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
