@@ -1,5 +1,6 @@
 package com.example.task_management_app.ui.tasklist
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,21 +9,27 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task_management_app.R
 import com.example.task_management_app.data.model.Task
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
+import com.example.task_management_app.data.repository.TaskRepositoryImpl
 
-class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
+class TaskListAdapter(private val taskRepository: TaskRepositoryImpl) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     private var taskList: List<Task> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
-        return TaskViewHolder(view)
+        return TaskViewHolder(view,taskRepository)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = taskList[position]
         holder.bind(task)
+        Log.d("TaskListAdapter", "Task at position $position: $task")
     }
 
     override fun getItemCount(): Int {
@@ -34,11 +41,12 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
         notifyDataSetChanged()
     }
 
-    class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TaskViewHolder(itemView: View, private val taskRepository: TaskRepositoryImpl) : RecyclerView.ViewHolder(itemView) {
         private val taskTitle: TextView = itemView.findViewById(R.id.tvTaskTitle)
         private val taskDueDate: TextView = itemView.findViewById(R.id.tvTaskDueDate)
         private val taskImportance: TextView = itemView.findViewById(R.id.tvTaskImportance)
         private val taskDone: CheckBox = itemView.findViewById(R.id.cbTaskDone)
+        //private val taskRepository: TaskRepositoryImpl = TaskRepositoryImpl()
 
         fun bind(task: Task) {
             taskTitle.text = task.name
@@ -60,7 +68,19 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
                 // Atualiza o estado da tarefa aqui, se necessário
                 task.completed = isChecked
                 // Notifique o ViewModel ou faça a atualização necessária
-            }
+                CoroutineScope(Dispatchers.IO).launch {
+                    val updatedTask = task.copy(id = task.id, completed = isChecked)
+                    val success = taskRepository.editTask(updatedTask)
+                    withContext(Dispatchers.Main) {
+                        if (!success) {
+                            // Handle failure, e.g., show a toast or revert the checkbox state
+                            taskDone.isChecked = !isChecked
+                        }
+                    }
+
+                }
+            Log.d("TaskViewHolder", "Binding Task: $task")
         }
     }
 }
+    }

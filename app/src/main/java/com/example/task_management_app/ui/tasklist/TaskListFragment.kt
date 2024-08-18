@@ -50,7 +50,11 @@ class TaskListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = TaskListAdapter()
+
+        // Passa o TaskRepositoryImpl para o adaptador
+        val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
+        val adapter = TaskListAdapter(taskRepository)
+
         binding.recyclerView.adapter = adapter
 
         viewLifecycleOwner.lifecycleScope.launch {
