@@ -30,7 +30,8 @@ class CalendarFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Inicialização de GetAllDays
-        val calendarDayRepository = CalendarDayRepositoryImpl(FirebaseService())
+        val firebaseService = FirebaseService() // Certifique-se de que a instância seja adequada
+        val calendarDayRepository = CalendarDayRepositoryImpl(firebaseService)
         getAllDays = getAllDays(calendarDayRepository)
     }
 
@@ -45,9 +46,17 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = CalendarAdapter { day ->
-            // Lógica para abrir a visualização das tarefas daquele dia
-        }
+        // Passa o CalendarDayRepositoryImpl para o adaptador
+        val firebaseService = FirebaseService() // Certifique-se de que a instância seja adequada
+        val calendarDayRepository = CalendarDayRepositoryImpl(firebaseService)
+
+        val adapter = CalendarAdapter(
+            onDayClicked = { day ->
+                // Lógica para abrir a visualização das tarefas daquele dia
+            },
+            calendarDayRepository = calendarDayRepository // Passa o repositório para o adaptador
+        )
+
         binding.calendarRecyclerView.layoutManager = GridLayoutManager(requireContext(), 7) // 7 colunas para os dias da semana
         binding.calendarRecyclerView.adapter = adapter
 

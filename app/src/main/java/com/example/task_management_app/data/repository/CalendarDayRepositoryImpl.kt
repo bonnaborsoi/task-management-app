@@ -1,5 +1,6 @@
 package com.example.task_management_app.data.repository
 
+import android.util.Log
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
@@ -57,6 +58,24 @@ class CalendarDayRepositoryImpl(
             true
         } catch (e: Exception) {
             false
+        }
+    }
+    // Adicione o método getDayQuantity aqui
+    suspend fun getDayQuantity(date: Long): Int? {
+        return try {
+            val startOfDay = getStartOfDay(date)
+            val dayRef = databaseReference.child(startOfDay.toString())
+            val daySnapshot = dayRef.get().await()
+
+            if (daySnapshot.exists()) {
+                val quantity = daySnapshot.child("quantity").getValue(Int::class.java)
+                quantity
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("CalendarDayRepositoryImpl", "Failed to get day quantity", e)
+            null
         }
     }
 

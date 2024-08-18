@@ -9,10 +9,16 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task_management_app.R
 import com.example.task_management_app.data.model.Day
+import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class CalendarAdapter(
-    private val onDayClicked: (Day) -> Unit
+    private val onDayClicked: (Day) -> Unit,
+    private val calendarDayRepository: CalendarDayRepositoryImpl // Adicione este parâmetro para acessar o repositório
 ) : RecyclerView.Adapter<CalendarAdapter.DayViewHolder>() {
 
     private var dayList: List<Day> = emptyList()
@@ -25,7 +31,7 @@ class CalendarAdapter(
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
         val day = dayList.getOrNull(position)
-        holder.bind(day, onDayClicked)
+        holder.bind(day, onDayClicked, calendarDayRepository) // Passe o calendarDayRepository para o ViewHolder
     }
 
     override fun getItemCount(): Int = dayList.size
@@ -39,39 +45,47 @@ class CalendarAdapter(
         private val dayText: TextView = itemView.findViewById(R.id.textViewDay)
         private val viewCircle: View = itemView.findViewById(R.id.viewCircle)
 
-        fun bind(day: Day?, onDayClicked: (Day) -> Unit) {
+        fun bind(day: Day?, onDayClicked: (Day) -> Unit, calendarDayRepository: CalendarDayRepositoryImpl) {
             day?.let {
                 val calendar = Calendar.getInstance().apply { timeInMillis = it.date }
                 val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
-                val isCurrentDay = isCurrentDay(it.date)
-                val isHighlightedDay = it.quantity > 0
-
-                // Adicionando logs para depuração
-                Log.d("CalendarAdapter", "Bind ViewHolder - Day: $dayOfMonth, DateInMillis: ${it.date}, IsCurrentDay: $isCurrentDay, IsHighlightedDay: $isHighlightedDay")
-
-                if (isCurrentDay) {
-                    viewCircle.visibility = View.VISIBLE
-                    dayText.setTextColor(
-                        if (isHighlightedDay) {
-                            ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark)
-                        } else {
-                            ContextCompat.getColor(itemView.context, android.R.color.white)
+                // Verifique no repositório se o dia atual tem alguma quantidade associada
+                CoroutineScope(Dispatchers.IO).launch {
+                    val quantity = calendarDayRepository.getDayQuantity(it.date)
+                    withContext(Dispatchers.Main) {
+                        if (quantity != null) {
+                            it.quantity = quantity
                         }
-                    )
-                } else {
-                    viewCircle.visibility = View.GONE
-                    dayText.setTextColor(
-                        if (isHighlightedDay) {
-                            ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark)
+
+                        val isCurrentDay = isCurrentDay(it.date)
+                        val isHighlightedDay = it.quantity > 0
+                        Log.d("CalendarAdapter", "Bind ViewHolder - Day: $dayOfMonth, DateInMillis: ${it.date}, IsCurrentDay: $isCurrentDay, IsHighlightedDay: $isHighlightedDay, Quantity: ${it.quantity}, DayObject: $it")
+
+                        if (isCurrentDay) {
+                            viewCircle.visibility = View.VISIBLE
+                            dayText.setTextColor(
+                                if (isHighlightedDay) {
+                                    ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark)
+                                } else {
+                                    ContextCompat.getColor(itemView.context, android.R.color.white)
+                                }
+                            )
                         } else {
-                            ContextCompat.getColor(itemView.context, android.R.color.black)
+                            viewCircle.visibility = View.GONE
+                            dayText.setTextColor(
+                                if (isHighlightedDay) {
+                                    ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark)
+                                } else {
+                                    ContextCompat.getColor(itemView.context, android.R.color.black)
+                                }
+                            )
                         }
-                    )
+
+                        dayText.text = dayOfMonth.toString()
+                        itemView.setOnClickListener { onDayClicked(day) }
+                    }
                 }
-
-                dayText.text = dayOfMonth.toString()
-                itemView.setOnClickListener { onDayClicked(day) }
             }
         }
 
@@ -91,7 +105,6 @@ class CalendarAdapter(
 
             val isCurrent = calendar.timeInMillis == today.timeInMillis
 
-            // Adicionando log para depuração
             Log.d("CalendarAdapter", "Is Current Day - DateInMillis: $dateInMillis, Result: $isCurrent")
 
             return isCurrent
