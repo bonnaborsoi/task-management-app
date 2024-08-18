@@ -53,7 +53,6 @@ class MainActivity : AppCompatActivity() {
         val startOfDayTimestamp = getStartOfDay(currentTimestamp) // Ajusta para o início do dia
 
         val newTask = Task(
-            id = null,
             name = "Lucca",
             dueDate = startOfDayTimestamp, // Usa o timestamp ajustado
             completed = false,

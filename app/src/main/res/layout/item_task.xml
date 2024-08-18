@@ -5,11 +5,32 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <CheckBox
+        android:id="@+id/cbTaskDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done" />
+
     <TextView
         android:id="@+id/tvTaskTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Task Title"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/tvTaskDueDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Due Date"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/tvTaskImportance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Importance"
+        android:layout_marginTop="4dp" />
 
 </LinearLayout>

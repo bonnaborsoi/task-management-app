@@ -6,7 +6,6 @@ import com.example.task_management_app.domain.usecase.GetAllTasks
 import com.example.task_management_app.data.model.Task
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 
 class TaskListViewModel(

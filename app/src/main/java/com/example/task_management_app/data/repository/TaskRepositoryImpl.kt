@@ -19,11 +19,12 @@ class TaskRepositoryImpl(
 
     override suspend fun addTask(task: Task): String {
         val newTaskRef = databaseReference.push() // Cria uma nova referência com um ID único
-        firebaseService.setValue(newTaskRef, task) // Utiliza o FirebaseService para salvar a tarefa
+        val taskWithId = task.copy(id = newTaskRef.key ?: "") // Adiciona o ID gerado ao task
+        firebaseService.setValue(newTaskRef, taskWithId) // Utiliza o FirebaseService para salvar a tarefa
 
         // Se a task estiver marcada no calendário, incrementa o dia correspondente
-        if (task.markedOnCalendar) {
-            calendarDayRepository.incrementDay(task.dueDate)
+        if (taskWithId.markedOnCalendar) {
+            calendarDayRepository.incrementDay(taskWithId.dueDate)
         }
 
         return newTaskRef.key ?: throw IllegalStateException("Task ID not generated")
@@ -31,27 +32,25 @@ class TaskRepositoryImpl(
 
     override suspend fun editTask(task: Task): Boolean {
         return try {
-            task.id?.let {
-                val taskRef = databaseReference.child(it)
+            val taskRef = databaseReference.child(task.id)
 
-                // Verificando se o campo isMarkedOnCalendar mudou
-                val previousTaskSnapshot = taskRef.get().await()
-                val previousTask = previousTaskSnapshot.getValue(Task::class.java)
+            // Verificando se o campo isMarkedOnCalendar mudou
+            val previousTaskSnapshot = taskRef.get().await()
+            val previousTask = previousTaskSnapshot.getValue(Task::class.java)
 
-                // Se o task foi marcada no calendário após a edição, incrementa o dia
-                if (previousTask?.markedOnCalendar == false && task.markedOnCalendar) {
-                    calendarDayRepository.incrementDay(task.dueDate)
-                }
+            // Se o task foi marcada no calendário após a edição, incrementa o dia
+            if (previousTask?.markedOnCalendar == false && task.markedOnCalendar) {
+                calendarDayRepository.incrementDay(task.dueDate)
+            }
 
-                // Se o task foi desmarcada no calendário após a edição, decrementa o dia
-                if (previousTask?.markedOnCalendar == true && !task.markedOnCalendar) {
-                    calendarDayRepository.decrementDay(task.dueDate)
-                }
+            // Se o task foi desmarcada no calendário após a edição, decrementa o dia
+            if (previousTask?.markedOnCalendar == true && !task.markedOnCalendar) {
+                calendarDayRepository.decrementDay(task.dueDate)
+            }
 
-                // Atualiza a tarefa
-                firebaseService.setValue(taskRef, task)
-                true
-            } ?: false
+            // Atualiza a tarefa
+            firebaseService.setValue(taskRef, task)
+            true
         } catch (e: Exception) {
             false
         }
@@ -62,15 +61,7 @@ class TaskRepositoryImpl(
             val taskRef = databaseReference.child(taskId)
             val taskSnapshot = taskRef.get().await()
             val task = taskSnapshot.getValue(Task::class.java)
-            Log.d("TaskRepositoryImpl", "Dados brutos do Firebase: ${taskSnapshot.value}")
-            val isMarkedOnCalendarDirect = taskSnapshot.child("MarkedOnCalendar").getValue(Boolean::class.java)
-            Log.d("TaskRepositoryImpl", "Valor direto de MarkedOnCalendar: $isMarkedOnCalendarDirect")
 
-            // Adicionando log para verificar o valor de task?.isMarkedOnCalendar
-            Log.d("TaskRepositoryImpl", "Valor de task?.isMarkedOnCalendar: ${task?.markedOnCalendar}")
-            if (task?.markedOnCalendar == true) {
-                Log.d("TaskRepositoryImpl", "é True") // Log adicional se for verdadeiro
-            }
             // Se a task estava marcada no calendário, decrementa o dia correspondente
             if (task?.markedOnCalendar == true) {
                 calendarDayRepository.decrementDay(task.dueDate)
