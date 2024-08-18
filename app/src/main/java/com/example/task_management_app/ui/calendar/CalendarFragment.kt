@@ -5,13 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.task_management_app.R
 import com.example.task_management_app.databinding.FragmentCalendarBinding
 import com.example.task_management_app.domain.usecase.getAllDays
 import com.example.task_management_app.data.firebase.FirebaseService
 import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
+import com.example.task_management_app.ui.tasklist.TaskListFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -29,8 +32,7 @@ class CalendarFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inicialização de GetAllDays
-        val firebaseService = FirebaseService() // Certifique-se de que a instância seja adequada
+        val firebaseService = FirebaseService()
         val calendarDayRepository = CalendarDayRepositoryImpl(firebaseService)
         getAllDays = getAllDays(calendarDayRepository)
     }
@@ -46,29 +48,25 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Passa o CalendarDayRepositoryImpl para o adaptador
-        val firebaseService = FirebaseService() // Certifique-se de que a instância seja adequada
+        val firebaseService = FirebaseService()
         val calendarDayRepository = CalendarDayRepositoryImpl(firebaseService)
 
         val adapter = CalendarAdapter(
             onDayClicked = { day ->
                 // Lógica para abrir a visualização das tarefas daquele dia
             },
-            calendarDayRepository = calendarDayRepository // Passa o repositório para o adaptador
+            calendarDayRepository = calendarDayRepository
         )
 
-        binding.calendarRecyclerView.layoutManager = GridLayoutManager(requireContext(), 7) // 7 colunas para os dias da semana
+        binding.calendarRecyclerView.layoutManager = GridLayoutManager(requireContext(), 7)
         binding.calendarRecyclerView.adapter = adapter
 
-        // Atualizar a lista de dias quando o mês é alterado
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.days.collectLatest { days ->
-                // Atualizar o adapter com os dias destacados
                 adapter.submitList(days)
             }
         }
 
-        // Botões para navegar entre os meses
         binding.buttonNextMonth.setOnClickListener {
             viewModel.goToNextMonth()
             refreshDays()
@@ -78,9 +76,15 @@ class CalendarFragment : Fragment() {
             viewModel.goToPreviousMonth()
             refreshDays()
         }
+
+        binding.buttonToTaskList.setOnClickListener {
+            parentFragmentManager.commit {
+                replace(R.id.fragment_container, TaskListFragment())
+                addToBackStack(null)
+            }
+        }
     }
 
-    // Função para atualizar os dias após alterar o mês
     private fun refreshDays() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.days.collectLatest { days ->

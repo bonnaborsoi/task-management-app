@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
         }*/
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
-                replace(R.id.fragment_container, CalendarFragment())
+                replace(R.id.fragment_container, TaskListFragment() /*CalendarFragment()*/)
             }
         }
     }

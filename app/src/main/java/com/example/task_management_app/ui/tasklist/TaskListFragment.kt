@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.task_management_app.R
 import com.example.task_management_app.databinding.FragmentTaskListBinding
 import com.example.task_management_app.domain.usecase.GetAllTasks
 import com.example.task_management_app.data.firebase.FirebaseService
@@ -15,6 +17,7 @@ import com.example.task_management_app.data.repository.TaskRepositoryImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
+import com.example.task_management_app.ui.calendar.CalendarFragment
 
 class TaskListFragment : Fragment() {
 
@@ -53,6 +56,14 @@ class TaskListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.tasks.collectLatest { tasks ->
                 adapter.submitList(tasks)
+            }
+        }
+
+        // Configuração do botão para navegar para o CalendarFragment
+        binding.buttonToCalendar.setOnClickListener {
+            parentFragmentManager.commit {
+                replace(R.id.fragment_container, CalendarFragment())
+                addToBackStack(null)
             }
         }
     }
