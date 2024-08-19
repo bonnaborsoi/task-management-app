@@ -53,7 +53,17 @@ class CalendarFragment : Fragment() {
 
         val adapter = CalendarAdapter(
             onDayClicked = { day ->
-                // Lógica para abrir a visualização das tarefas daquele dia
+                // Crie uma instância de TaskListFragment com a data selecionada como argumento
+                val taskListFragment = TaskListFragment().apply {
+                    arguments = Bundle().apply {
+                        putLong("selectedDate", day.date)
+                    }
+                }
+
+                parentFragmentManager.commit {
+                    replace(R.id.fragment_container, taskListFragment)
+                    addToBackStack(null)
+                }
             },
             calendarDayRepository = calendarDayRepository
         )

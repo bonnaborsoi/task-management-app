@@ -1,5 +1,6 @@
 package com.example.task_management_app.ui.tasklist
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
 import com.example.task_management_app.ui.calendar.CalendarFragment
+import java.util.*
 
 class TaskListFragment : Fragment() {
 
@@ -36,6 +38,11 @@ class TaskListFragment : Fragment() {
         // Inicialização de GetAllTasks
         val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
         getAllTasks = GetAllTasks(taskRepository)
+
+        // Verifica se há uma data selecionada para filtrar as tarefas
+        arguments?.getLong("selectedDate")?.let { selectedDate ->
+            viewModel.filterTasksByDate(selectedDate)
+        }
     }
 
     override fun onCreateView(
@@ -51,16 +58,26 @@ class TaskListFragment : Fragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Passa o TaskRepositoryImpl para o adaptador
         val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
         val adapter = TaskListAdapter(taskRepository)
-
         binding.recyclerView.adapter = adapter
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.tasks.collectLatest { tasks ->
                 adapter.submitList(tasks)
             }
+        }
+
+        // Configuração do botão de filtro
+        binding.buttonFilter.setOnClickListener {
+            showDatePicker { selectedDate ->
+                viewModel.filterTasksByDate(selectedDate)
+            }
+        }
+
+        // Configuração do botão para desfazer o filtro
+        binding.buttonClearFilter.setOnClickListener {
+            viewModel.clearFilter()
         }
 
         // Configuração do botão para navegar para o CalendarFragment
@@ -70,6 +87,22 @@ class TaskListFragment : Fragment() {
                 addToBackStack(null)
             }
         }
+    }
+
+    private fun showDatePicker(onDateSelected: (Long) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                calendar.set(year, month, dayOfMonth, 0, 0, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+                onDateSelected(calendar.timeInMillis)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
     }
 
     override fun onDestroyView() {
