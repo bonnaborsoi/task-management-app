@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/backgroundColor">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -12,6 +13,8 @@
         android:layout_height="wrap_content"
         android:text="Task List"
         android:textSize="24sp"
+        android:textColor="@color/textColor_one"
+        android:fontFamily="@font/poppins_bold"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp" />
@@ -20,13 +23,22 @@
         android:id="@+id/spinnerFilterCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
-
+        android:textColor="@color/textColor_one"
+        android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
+        android:fontFamily="@font/poppins_bold"
+        android:layout_marginTop="16dp"
+        android:background="@null"/>
+        <!-- essa ultima linha tira o background padrao do spinner-->
     <Spinner
         android:id="@+id/spinnerFilterImportant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
+        android:textColor="@color/textColor_one"
+        android:fontFamily="@font/poppins_bold"
+        android:layout_marginTop="16dp"
+        android:background="@null"/>
+        <!-- essa ultima linha tira o background padrao do spinner-->
+
 
     <Button
         android:id="@+id/button_filter"

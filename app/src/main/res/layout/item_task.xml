@@ -9,6 +9,8 @@
         android:id="@+id/cbTaskDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/textColor_one"
+        android:fontFamily="@font/poppins_semibold"
         android:text="Done" />
 
     <TextView
@@ -17,6 +19,8 @@
         android:layout_height="wrap_content"
         android:text="Task Title"
         android:textSize="18sp"
+        android:textColor="@color/textColor_one"
+        android:fontFamily="@font/poppins_semibold"
         android:layout_marginTop="8dp" />
 
     <TextView
@@ -24,6 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Due Date"
+        android:textColor="@color/textColor_one"
+        android:fontFamily="@font/poppins_semibold"
         android:layout_marginTop="4dp" />
 
     <TextView
@@ -31,6 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Importance"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/textColor_one"
         android:layout_marginTop="4dp" />
 
 </LinearLayout>

@@ -71,7 +71,8 @@ class TaskListFragment : Fragment() {
         val completedSpinnerAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.completed_filter_options,
-            android.R.layout.simple_spinner_item
+            R.layout.spinner_item
+            //android.R.layout.simple_spinner_item
         )
         completedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerFilterCompleted.adapter = completedSpinnerAdapter
@@ -91,7 +92,8 @@ class TaskListFragment : Fragment() {
         val importantSpinnerAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.important_filter_options,
-            android.R.layout.simple_spinner_item
+            R.layout.spinner_item
+            //android.R.layout.simple_spinner_item
         )
         importantSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerFilterImportant.adapter = importantSpinnerAdapter
