@@ -7,6 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -128,13 +137,19 @@ class TaskListFragment : Fragment() {
             viewModel.clearFilter()
         }
 
-        // Configuração do botão para navegar para o CalendarFragment
-        binding.buttonToCalendar.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(R.id.fragment_container, CalendarFragment())
-                addToBackStack(null)
+        // Adicione o botão Compose à sua visualização existente
+        binding.composeViewButtonToCalendar.apply {
+            setContent {
+                NavigationButtonToCalendar { navigateToCalendarFragment() }
             }
         }
+//        // Configuração do botão para navegar para o CalendarFragment
+//        binding.buttonToCalendar.setOnClickListener {
+//            parentFragmentManager.commit {
+//                replace(R.id.fragment_container, CalendarFragment())
+//                addToBackStack(null)
+//            }
+//        }
     }
 
     private fun applyFilters(tasks: List<Task> = viewModel.tasks.value) {
@@ -176,5 +191,25 @@ class TaskListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+    // compose para o botao
+    @Composable
+    fun NavigationButtonToCalendar(onClick: () -> Unit) {
+        Button(
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0xFF071952), // Cor de fundo do botão
+                contentColor = Color.White // Cor do texto do botão
+            ),
+            modifier = Modifier.padding(16.dp) // Modificador opcional para margem, tamanho, etc.
+        ) {
+            Text(text = "Go to Calendar")
+        }
+    }
+    private fun navigateToCalendarFragment() {
+        parentFragmentManager.commit {
+            replace(R.id.fragment_container, CalendarFragment())
+            addToBackStack(null)
+        }
     }
 }
