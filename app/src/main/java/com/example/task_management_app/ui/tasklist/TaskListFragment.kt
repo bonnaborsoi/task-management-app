@@ -32,7 +32,7 @@ class TaskListFragment : Fragment() {
     private val binding get() = _binding!!
 
     // Variáveis para armazenar o estado dos filtros
-    private var showCompleted: Boolean = false
+    private var completedFilter: String = "All tasks"
     private var importantFilter: String = "All Tasks"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,23 +55,36 @@ class TaskListFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
         val adapter = TaskListAdapter(taskRepository)
-        //val adapter = TaskListAdapter(getAllTasks.taskRepository)
         binding.recyclerView.adapter = adapter
 
-        // Inicializar filtro de completado
-        binding.cbFilterCompleted.setOnCheckedChangeListener { _, isChecked ->
-            showCompleted = isChecked
-            applyFilters()
+        // Configurar o Spinner para o filtro de completados
+        val completedSpinnerAdapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.completed_filter_options,
+            android.R.layout.simple_spinner_item
+        )
+        completedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerFilterCompleted.adapter = completedSpinnerAdapter
+
+        binding.spinnerFilterCompleted.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                completedFilter = parent.getItemAtPosition(position) as String
+                applyFilters()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Não é necessário fazer nada
+            }
         }
 
         // Configurar o Spinner para o filtro de importância
-        val spinnerAdapter = ArrayAdapter.createFromResource(
+        val importantSpinnerAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.important_filter_options,
             android.R.layout.simple_spinner_item
         )
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerFilterImportant.adapter = spinnerAdapter
+        importantSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerFilterImportant.adapter = importantSpinnerAdapter
 
         binding.spinnerFilterImportant.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -102,11 +115,11 @@ class TaskListFragment : Fragment() {
     private fun applyFilters(tasks: List<Task> = viewModel.tasks.value) {
         var filteredTasks = tasks
 
-        // Aplicar filtro por completado
-        if (showCompleted) {
-            filteredTasks = filteredTasks.filter { it.completed }
-        } else {
-            filteredTasks = filteredTasks.filter { !it.completed }
+        // Aplicar filtro por completados
+        filteredTasks = when (completedFilter) {
+            "Completed tasks Only" -> filteredTasks.filter { it.completed }
+            "Non-Completed tasks Only" -> filteredTasks.filter { !it.completed }
+            else -> filteredTasks
         }
 
         // Aplicar filtro por importância

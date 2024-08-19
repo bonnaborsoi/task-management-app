@@ -16,25 +16,17 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp" />
 
-    <CheckBox
-        android:id="@+id/cbFilterCompleted"
+    <Spinner
+        android:id="@+id/spinnerFilterCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Completed" />
+        android:layout_marginTop="16dp" />
 
     <Spinner
         android:id="@+id/spinnerFilterImportant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:entries="@array/important_filter_options"
         android:layout_marginTop="16dp" />
-
-    <Spinner
-        android:id="@+id/spinnerFilterCompleted"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:entries="@array/completed_filter_options" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
