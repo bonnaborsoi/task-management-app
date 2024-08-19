@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,9 +26,9 @@ import com.example.task_management_app.domain.usecase.GetAllTasks
 import com.example.task_management_app.data.firebase.FirebaseService
 import com.example.task_management_app.data.model.Task
 import com.example.task_management_app.data.repository.TaskRepositoryImpl
+import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
 import com.example.task_management_app.ui.calendar.CalendarFragment
 import java.util.*
 
@@ -42,18 +41,17 @@ class TaskListFragment : Fragment() {
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
 
-    // Variáveis para armazenar o estado dos filtros
     private var completedFilter: String = "All tasks"
     private var importantFilter: String = "All Tasks"
+
+    lateinit var adapter: TaskListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inicialização de GetAllTasks
         val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
         getAllTasks = GetAllTasks(taskRepository)
 
-        // Verifica se há uma data selecionada para filtrar as tarefas
         arguments?.getLong("selectedDate")?.let { selectedDate ->
             viewModel.filterTasksByDate(selectedDate)
         }
@@ -73,15 +71,16 @@ class TaskListFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
-        val adapter = TaskListAdapter(taskRepository)
+        adapter = TaskListAdapter(taskRepository) { task ->
+            adapter.removeTask(task) // Atualize o adapter quando a tarefa for removida
+        }
+
         binding.recyclerView.adapter = adapter
 
-        // Configurar o Spinner para o filtro de completados
         val completedSpinnerAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.completed_filter_options,
             R.layout.spinner_item
-            //android.R.layout.simple_spinner_item
         )
         completedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerFilterCompleted.adapter = completedSpinnerAdapter
@@ -92,17 +91,13 @@ class TaskListFragment : Fragment() {
                 applyFilters()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Não é necessário fazer nada
-            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // Configurar o Spinner para o filtro de importância
         val importantSpinnerAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.important_filter_options,
             R.layout.spinner_item
-            //android.R.layout.simple_spinner_item
         )
         importantSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerFilterImportant.adapter = importantSpinnerAdapter
@@ -113,63 +108,48 @@ class TaskListFragment : Fragment() {
                 applyFilters()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Não é necessário fazer nada
-            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // Coletar as tarefas do ViewModel e aplicar os filtros
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.tasks.collectLatest { tasks ->
-                applyFilters(tasks)
+                adapter.submitList(tasks)
             }
         }
 
-        // Configuração do botão de filtro
         binding.buttonFilter.setOnClickListener {
             showDatePicker { selectedDate ->
                 viewModel.filterTasksByDate(selectedDate)
             }
         }
 
-        // Configuração do botão para desfazer o filtro
         binding.buttonClearFilter.setOnClickListener {
             viewModel.clearFilter()
         }
 
-        // Adicione o botão Compose à sua visualização existente
         binding.composeViewButtonToCalendar.apply {
             setContent {
                 NavigationButtonToCalendar { navigateToCalendarFragment() }
             }
         }
-//        // Configuração do botão para navegar para o CalendarFragment
-//        binding.buttonToCalendar.setOnClickListener {
-//            parentFragmentManager.commit {
-//                replace(R.id.fragment_container, CalendarFragment())
-//                addToBackStack(null)
-//            }
-//        }
     }
 
     private fun applyFilters(tasks: List<Task> = viewModel.tasks.value) {
         var filteredTasks = tasks
 
-        // Aplicar filtro por completados
         filteredTasks = when (completedFilter) {
             "Completed tasks Only" -> filteredTasks.filter { it.completed }
             "Non-Completed tasks Only" -> filteredTasks.filter { !it.completed }
             else -> filteredTasks
         }
 
-        // Aplicar filtro por importância
         filteredTasks = when (importantFilter) {
             "Important Only" -> filteredTasks.filter { it.markedOnCalendar }
             "Non-Important Only" -> filteredTasks.filter { !it.markedOnCalendar }
             else -> filteredTasks
         }
 
-        (binding.recyclerView.adapter as TaskListAdapter).submitList(filteredTasks)
+        adapter.submitList(filteredTasks)
     }
 
     private fun showDatePicker(onDateSelected: (Long) -> Unit) {
@@ -192,20 +172,21 @@ class TaskListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    // compose para o botao
+
     @Composable
     fun NavigationButtonToCalendar(onClick: () -> Unit) {
         Button(
             onClick = onClick,
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color(0xFF071952), // Cor de fundo do botão
-                contentColor = Color.White // Cor do texto do botão
+                backgroundColor = Color(0xFF071952),
+                contentColor = Color.White
             ),
-            modifier = Modifier.padding(16.dp) // Modificador opcional para margem, tamanho, etc.
+            modifier = Modifier.padding(16.dp)
         ) {
             Text(text = "Go to Calendar")
         }
     }
+
     private fun navigateToCalendarFragment() {
         parentFragmentManager.commit {
             replace(R.id.fragment_container, CalendarFragment())

@@ -56,9 +56,10 @@ class TaskRepositoryImpl(
         }
     }
 
-    override suspend fun deleteTask(taskId: String): Boolean {
+    override suspend fun deleteTask(task: Task): Boolean {
         return try {
-            val taskRef = databaseReference.child(taskId)
+            val taskRef = databaseReference.child(task.id)
+
             val taskSnapshot = taskRef.get().await()
             val task = taskSnapshot.getValue(Task::class.java)
 

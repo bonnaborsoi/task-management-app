@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="16dp"
     android:background="@drawable/border"
     android:layout_margin="8dp">
@@ -23,6 +21,7 @@
         android:textSize="18sp"
         android:textColor="@color/textColor_one"
         android:fontFamily="@font/poppins_semibold"
+        android:layout_below="@id/cbTaskDone"
         android:layout_marginTop="8dp" />
 
     <TextView
@@ -32,6 +31,7 @@
         android:text="Due Date"
         android:textColor="@color/textColor_one"
         android:fontFamily="@font/poppins_semibold"
+        android:layout_below="@id/tvTaskTitle"
         android:layout_marginTop="4dp" />
 
     <TextView
@@ -41,6 +41,20 @@
         android:text="Importance"
         android:fontFamily="@font/poppins_semibold"
         android:textColor="@color/textColor_one"
+        android:layout_below="@id/tvTaskDueDate"
         android:layout_marginTop="4dp" />
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="?android:selectableItemBackground"
+        android:src="@drawable/delete_icon"
+        android:contentDescription="@string/delete_task"
+        android:padding="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp" />
+
+</RelativeLayout>
