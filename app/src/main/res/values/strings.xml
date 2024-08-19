@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">task-management-app</string>
+    <string-array name="important_filter_options">
+        <item>All Tasks</item>
+        <item>Important Only</item>
+        <item>Non-Important Only</item>
+    </string-array>
+
+    <string-array name="completed_filter_options">
+        <item>All Tasks</item>
+        <item>Completed tasks Only</item>
+        <item>Non-Completed tasks Only</item>
+    </string-array>
 </resources>
