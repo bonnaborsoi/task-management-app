@@ -28,6 +28,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp" />
 
+    <Button
+        android:id="@+id/button_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filtrar por Data"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Adicionando o botão para limpar o filtro -->
+    <Button
+        android:id="@+id/button_clear_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Limpar Filtro"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

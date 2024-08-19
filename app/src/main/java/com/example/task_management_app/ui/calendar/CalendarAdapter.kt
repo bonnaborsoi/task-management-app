@@ -50,7 +50,6 @@ class CalendarAdapter(
                 val calendar = Calendar.getInstance().apply { timeInMillis = it.date }
                 val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
-                // Verifique no repositório se o dia atual tem alguma quantidade associada
                 CoroutineScope(Dispatchers.IO).launch {
                     val quantity = calendarDayRepository.getDayQuantity(it.date)
                     withContext(Dispatchers.Main) {
@@ -60,7 +59,6 @@ class CalendarAdapter(
 
                         val isCurrentDay = isCurrentDay(it.date)
                         val isHighlightedDay = it.quantity > 0
-                        Log.d("CalendarAdapter", "Bind ViewHolder - Day: $dayOfMonth, DateInMillis: ${it.date}, IsCurrentDay: $isCurrentDay, IsHighlightedDay: $isHighlightedDay, Quantity: ${it.quantity}, DayObject: $it")
 
                         if (isCurrentDay) {
                             viewCircle.visibility = View.VISIBLE
@@ -103,11 +101,7 @@ class CalendarAdapter(
                 set(Calendar.MILLISECOND, 0)
             }
 
-            val isCurrent = calendar.timeInMillis == today.timeInMillis
-
-            Log.d("CalendarAdapter", "Is Current Day - DateInMillis: $dateInMillis, Result: $isCurrent")
-
-            return isCurrent
+            return calendar.timeInMillis == today.timeInMillis
         }
     }
 }
