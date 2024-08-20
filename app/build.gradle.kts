@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.appcompat)
+    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -124,4 +125,5 @@ dependencies {
     // Optional - Integration with RxJava
     implementation("androidx.compose.runtime:runtime-rxjava2")
     //kapt("groupId:artifactId:version")
+    implementation("com.google.android.gms:play-services-maps:18.0.1")
 }
