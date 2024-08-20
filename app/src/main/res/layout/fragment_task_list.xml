@@ -4,41 +4,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="0dp"
     android:background="@color/backgroundColor">
+
+    <View
+        android:layout_width="411dp"
+        android:layout_height="72dp"
+        android:background="@color/purple_700"
+        />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task List"
+        android:text="@string/needtodo"
         android:textSize="24sp"
+        android:paddingTop="13dp"
         android:textColor="@color/textColor_one"
         android:fontFamily="@font/poppins_bold"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="16dp" />
+        android:paddingBottom="0dp" />
 
-    <Spinner
-        android:id="@+id/spinnerFilterCompleted"
+    <!-- Novo LinearLayout com orientação horizontal -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/textColor_one"
-        android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
-        android:fontFamily="@font/poppins_bold"
-        android:layout_marginTop="16dp"
-        android:background="@null"/>
-        <!-- essa ultima linha tira o background padrao do spinner-->
-    <Spinner
-        android:id="@+id/spinnerFilterImportant"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/textColor_one"
-        android:fontFamily="@font/poppins_bold"
-        android:layout_marginTop="16dp"
-        android:background="@null"/>
-        <!-- essa ultima linha tira o background padrao do spinner-->
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="2dp">
 
+        <Spinner
+            android:id="@+id/spinnerFilterCompleted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor_one"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
+            android:fontFamily="@font/poppins_bold"
+            android:background="@null" />
+
+        <Spinner
+            android:id="@+id/spinnerFilterImportant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@null"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/textColor_one" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/button_filter"
@@ -46,41 +62,46 @@
         android:layout_height="wrap_content"
         android:text="Filtrar por Data"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="0dp" />
 
-    <!-- Adicionando o botão para limpar o filtro -->
+    <!--  Limpa filtro de data -->
     <Button
         android:id="@+id/button_clear_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Limpar Filtro"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="0dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical" />
-
-<!--    <Button-->
+    <!--    <Button-->
 <!--        android:id="@+id/button_to_calendar"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:text="Ir para Calendário"-->
 <!--        android:layout_gravity="center_horizontal"-->
 <!--        android:layout_marginTop="16dp"/>-->
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/composeViewButtonToCalendar"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:scrollbars="vertical" />
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/composeViewButtonToCalendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp" />
 
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/composeAddTaskButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
-
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/composeAddTaskButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp" />
+    </LinearLayout>
 </LinearLayout>
