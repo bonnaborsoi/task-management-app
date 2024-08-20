@@ -73,6 +73,10 @@ class TaskListFragment : Fragment() {
         val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
         adapter = TaskListAdapter(taskRepository) { task ->
             adapter.removeTask(task) // Atualize o adapter quando a tarefa for removida
+            parentFragmentManager.commit {
+                replace(R.id.fragment_container, TaskListFragment())
+                addToBackStack(null)
+            }
         }
 
         binding.recyclerView.adapter = adapter
