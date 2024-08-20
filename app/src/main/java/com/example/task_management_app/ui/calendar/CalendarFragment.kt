@@ -80,6 +80,12 @@ class CalendarFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentMonthName.collectLatest { monthName ->
+                binding.monthView.text = monthName
+            }
+        }
+
         binding.buttonNextMonth.setOnClickListener {
             viewModel.goToNextMonth()
             refreshDays()

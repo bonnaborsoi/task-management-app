@@ -68,4 +68,10 @@ class CalendarViewModel(
 
         return monthDays
     }
+    // Novo método para formatar o mês e ano
+    val currentMonthName: StateFlow<String> = currentDate.map { dateInMillis ->
+        val calendar = Calendar.getInstance().apply { timeInMillis = dateInMillis }
+        val monthFormat = java.text.SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+        monthFormat.format(calendar.time)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, "")
 }

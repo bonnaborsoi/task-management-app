@@ -66,7 +66,7 @@ class CalendarAdapter(
                                 if (isHighlightedDay) {
                                     ContextCompat.getColor(itemView.context, android.R.color.holo_red_dark)
                                 } else {
-                                    ContextCompat.getColor(itemView.context, android.R.color.white)
+                                    ContextCompat.getColor(itemView.context, android.R.color.black)
                                 }
                             )
                         } else {
