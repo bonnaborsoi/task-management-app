@@ -20,11 +20,12 @@
         android:padding="20dp">
         <Button
             android:id="@+id/buttonPreviousMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Previous"
-            android:padding="16dp"
-            android:layout_alignParentStart="true"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins_bold"
+            android:background="@drawable/previous_month_icon"/>
 
         <TextView
             android:id="@+id/monthView"
@@ -36,15 +37,16 @@
             android:padding="8dp"
             android:textColor="@color/textColor_one"
             android:fontFamily="@font/poppins_bold"
-
             android:layout_marginTop="8dp" />
         <Button
             android:id="@+id/buttonNextMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next"
-            android:padding="16dp"
-            android:layout_alignParentEnd="true"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="7dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/next_month_icon"/>
     </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calendarRecyclerView"
@@ -69,6 +71,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:text="Ir para Lista de Tarefas" />
+        android:textColor="@color/white"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Go to Tasks View"
+        android:background="@drawable/button_border"/>
 
 </LinearLayout>
