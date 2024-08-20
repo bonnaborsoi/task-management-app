@@ -2,6 +2,7 @@ package com.example.task_management_app.ui.tasklist
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,10 @@ import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.example.task_management_app.ui.calendar.CalendarFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.util.*
+import com.example.task_management_app.domain.usecase.CreateTask
 
 class TaskListFragment : Fragment() {
 
@@ -43,6 +47,8 @@ class TaskListFragment : Fragment() {
 
     private var completedFilter: String = "All tasks"
     private var importantFilter: String = "All Tasks"
+    private lateinit var createTask: CreateTask
+
 
     lateinit var adapter: TaskListAdapter
 
@@ -55,6 +61,7 @@ class TaskListFragment : Fragment() {
         arguments?.getLong("selectedDate")?.let { selectedDate ->
             viewModel.filterTasksByDate(selectedDate)
         }
+        createTask = CreateTask(taskRepository)
     }
 
     override fun onCreateView(
@@ -71,13 +78,22 @@ class TaskListFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val taskRepository = TaskRepositoryImpl(FirebaseService(), CalendarDayRepositoryImpl(FirebaseService()))
-        adapter = TaskListAdapter(taskRepository) { task ->
-            adapter.removeTask(task) // Atualize o adapter quando a tarefa for removida
-            parentFragmentManager.commit {
-                replace(R.id.fragment_container, TaskListFragment())
-                addToBackStack(null)
+        adapter = TaskListAdapter(taskRepository,
+            onTaskRemoved = { task ->
+                adapter.removeTask(task)
+                parentFragmentManager.commit {
+                    replace(R.id.fragment_container, TaskListFragment())
+                    addToBackStack(null)
+                }
+            },
+            onTaskEdited = { task ->
+                adapter.editTask(task)
+                parentFragmentManager.commit {
+                    replace(R.id.fragment_container, TaskListFragment())
+                    addToBackStack(null)
+                }
             }
-        }
+        )
 
         binding.recyclerView.adapter = adapter
 
@@ -136,6 +152,11 @@ class TaskListFragment : Fragment() {
                 NavigationButtonToCalendar { navigateToCalendarFragment() }
             }
         }
+        binding.composeAddTaskButton.apply {
+            setContent {
+                AddTaskButton { AddTaskFunction() }
+            }
+        }
     }
 
     private fun applyFilters(tasks: List<Task> = viewModel.tasks.value) {
@@ -177,6 +198,17 @@ class TaskListFragment : Fragment() {
         _binding = null
     }
 
+    fun getStartOfDay(timestamp: Long): Long {
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = timestamp
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        return calendar.timeInMillis
+    }
+
     @Composable
     fun NavigationButtonToCalendar(onClick: () -> Unit) {
         Button(
@@ -195,6 +227,47 @@ class TaskListFragment : Fragment() {
         parentFragmentManager.commit {
             replace(R.id.fragment_container, CalendarFragment())
             addToBackStack(null)
+        }
+    }
+
+    @Composable
+    fun AddTaskButton(onClick: () -> Unit) {
+        Button(
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0xFF071952),
+                contentColor = Color.White
+            ),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(text = "Add Task")
+        }
+    }
+
+
+
+    private fun AddTaskFunction() {
+        val currentTimestamp = System.currentTimeMillis()
+        val startOfDayTimestamp = getStartOfDay(currentTimestamp) // Ajusta para o início do dia
+
+        val newTask = Task(
+            name = "New Task",
+            dueDate = startOfDayTimestamp, // Usa o timestamp ajustado
+            completed = false,
+            markedOnCalendar = false
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val taskId = createTask(newTask) // Usando o caso de uso CreateTask
+                Log.d("MainActivity", "Task adicionada com sucesso! ID: $taskId")
+                parentFragmentManager.commit {
+                    replace(R.id.fragment_container, TaskListFragment())
+                    addToBackStack(null)
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Erro ao adicionar task", e)
+            }
         }
     }
 }

@@ -38,14 +38,19 @@ class TaskRepositoryImpl(
             val previousTaskSnapshot = taskRef.get().await()
             val previousTask = previousTaskSnapshot.getValue(Task::class.java)
 
-            // Se o task foi marcada no calendário após a edição, incrementa o dia
-            if (previousTask?.markedOnCalendar == false && task.markedOnCalendar) {
+            if (previousTask?.markedOnCalendar == false && task.markedOnCalendar) {  // Se o task foi marcada no calendário após a edição, incrementa o dia
                 calendarDayRepository.incrementDay(task.dueDate)
-            }
-
-            // Se o task foi desmarcada no calendário após a edição, decrementa o dia
-            if (previousTask?.markedOnCalendar == true && !task.markedOnCalendar) {
-                calendarDayRepository.decrementDay(task.dueDate)
+            } else if (previousTask?.markedOnCalendar == true && !task.markedOnCalendar) { // Se o task foi desmarcada no calendário após a edição, decrementa o dia
+                calendarDayRepository.decrementDay(previousTask.dueDate)
+            } else if (previousTask?.markedOnCalendar == true && task.markedOnCalendar){
+                if (previousTask?.dueDate != task.dueDate){
+                    if (previousTask != null) {
+                        calendarDayRepository.decrementDay(previousTask.dueDate)
+                    }
+                    if (task.markedOnCalendar){
+                        calendarDayRepository.incrementDay(task.dueDate)
+                    }
+                }
             }
 
             // Atualiza a tarefa

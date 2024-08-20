@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">task-management-app</string>
     <string name="delete_task">deletetask</string>
+    <string name="edit_task">edittask</string>
     <string-array name="important_filter_options">
         <item>All Tasks</item>
         <item>Important Only</item>
