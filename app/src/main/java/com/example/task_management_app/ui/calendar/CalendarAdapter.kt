@@ -80,8 +80,12 @@ class CalendarAdapter(
                             )
                         }
 
-                        dayText.text = dayOfMonth.toString()
-                        itemView.setOnClickListener { onDayClicked(day) }
+                        if (day.quantity == -1){
+                            dayText.text = ""
+                        } else {
+                            dayText.text = dayOfMonth.toString()
+                            itemView.setOnClickListener { onDayClicked(day) }
+                        }
                     }
                 }
             }

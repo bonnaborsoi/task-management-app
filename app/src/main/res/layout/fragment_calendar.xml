@@ -1,42 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <data>
-        <!-- Aqui você pode definir variáveis de dados se necessário -->
-    </data>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/calendarRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"/>
-
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="0dp"
+    android:background="@color/test_background">
+    <View
+        android:layout_width="411dp"
+        android:layout_height="72dp"
+        android:background="@color/purple_700"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:padding="20dp">
         <Button
             android:id="@+id/buttonPreviousMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Previous"
+            android:padding="16dp"
             android:layout_alignParentStart="true"/>
 
+        <TextView
+            android:id="@+id/monthView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Current Month"
+            android:textSize="22sp"
+            android:padding="8dp"
+            android:textColor="@color/textColor_one"
+            android:fontFamily="@font/poppins_bold"
+
+            android:layout_marginTop="8dp" />
         <Button
             android:id="@+id/buttonNextMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Next"
+            android:padding="16dp"
             android:layout_alignParentEnd="true"/>
+    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendarRecyclerView"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight="1" />
+
+
 
         <Button
             android:id="@+id/button_to_task_list"
@@ -47,5 +72,4 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"/>
 
-    </RelativeLayout>
-</layout>
+</LinearLayout>
