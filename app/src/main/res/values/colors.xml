@@ -12,4 +12,7 @@
     <color name="RecyclerViewColor_test">#EEEDEB</color>
     <color name="textColor_one">#071952</color>
     <color name="textColor_two">#088395</color>
+    <color name="border_background">#F8EDFF</color>
+    <color name="test_background">#FFF7FC</color>
+
 </resources>

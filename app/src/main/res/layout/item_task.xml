@@ -9,19 +9,23 @@
         android:id="@+id/cbTaskDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/textColor_one"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_alignParentEnd="true"
+        android:button="@drawable/custom_checkbox"
         android:fontFamily="@font/poppins_semibold"
-        android:text="Done" />
+        android:textColor="@color/textColor_one" />
 
     <TextView
         android:id="@+id/tvTaskTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:text="Task Title"
         android:textSize="18sp"
         android:textColor="@color/textColor_one"
-        android:fontFamily="@font/poppins_semibold"
-        android:layout_below="@id/cbTaskDone"
+        android:fontFamily="@font/poppins_bold"
+
         android:layout_marginTop="8dp" />
 
     <TextView
@@ -50,7 +54,7 @@
         android:layout_height="25dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="70dp"
         android:layout_marginEnd="0dp"
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/delete_task"
@@ -63,8 +67,8 @@
         android:layout_height="25dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="0dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="30dp"
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/edit_task"
         android:padding="0dp"
