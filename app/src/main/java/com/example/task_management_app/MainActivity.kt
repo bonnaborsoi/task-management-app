@@ -15,8 +15,7 @@ import com.example.task_management_app.ui.tasklist.TaskListFragment
 import com.example.task_management_app.domain.usecase.EditTask
 import com.example.task_management_app.domain.usecase.DeleteTask
 import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
-import com.example.task_management_app.ui.calendar.CalendarFragment
-import com.example.task_management_app.ui.map.MapFragment
+import com.example.task_management_app.ui.map.MapViewFragment
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {

@@ -13,6 +13,7 @@ class TaskListViewModel(
 ) : ViewModel() {
 
     private val _filterDate = MutableStateFlow<Long?>(null)
+    val filterDate: StateFlow<Long?> get() = _filterDate
     val tasks: StateFlow<List<Task>> = _filterDate
         .flatMapLatest { date ->
             if (date != null) {

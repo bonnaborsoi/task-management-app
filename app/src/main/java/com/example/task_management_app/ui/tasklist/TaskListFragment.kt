@@ -136,6 +136,15 @@ class TaskListFragment : Fragment() {
                 adapter.submitList(tasks)
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.filterDate.collectLatest { date ->
+                binding.buttonClearFilter.visibility = if (date != null) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+            }
+        }
 
         binding.buttonFilter.setOnClickListener {
             showDatePicker { selectedDate ->

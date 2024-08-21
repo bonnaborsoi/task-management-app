@@ -2,6 +2,7 @@ package com.example.task_management_app.ui.tasklist
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task_management_app.R
 import com.example.task_management_app.data.model.Task
@@ -22,12 +24,14 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.task_management_app.data.repository.TaskRepositoryImpl
+import com.google.android.gms.maps.MapFragment
 import java.util.Calendar
 
 class TaskListAdapter(
     private val taskRepository: TaskRepositoryImpl,
     private val onTaskRemoved: (Task) -> Unit,
-    private val onTaskEdited: (Task) -> Unit
+    private val onTaskEdited: (Task) -> Unit,
+    private val fragmentManager: FragmentManager
 ) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     private var taskList: MutableList<Task> = mutableListOf()
@@ -35,7 +39,7 @@ class TaskListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
-        return TaskViewHolder(view, taskRepository, onTaskRemoved, onTaskEdited, ::isEditingFun, ::setEditingState)
+        return TaskViewHolder(view, taskRepository, onTaskRemoved, onTaskEdited, ::isEditingFun, ::setEditingState, fragmentManager)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
@@ -81,7 +85,8 @@ class TaskListAdapter(
         private val onTaskRemoved: (Task) -> Unit,
         private val onTaskEdited: (Task) -> Unit,
         private val isEditing: () -> Boolean,
-        private val setEditingState: (Boolean) -> Unit
+        private val setEditingState: (Boolean) -> Unit,
+        private val fragmentManager: FragmentManager
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val taskTitle: TextView = itemView.findViewById(R.id.tvTaskTitle)
@@ -90,6 +95,7 @@ class TaskListAdapter(
         private val taskDone: CheckBox = itemView.findViewById(R.id.cbTaskDone)
         private val deleteThisTask: ImageButton = itemView.findViewById(R.id.btnDelete)
         private val editThisTask: ImageButton = itemView.findViewById(R.id.btnEdit)
+        private val taskLocation: TextView = itemView.findViewById(R.id.tvTaskLocation)
 
         fun bind(task: Task) {
             taskTitle.text = task.name
@@ -99,6 +105,8 @@ class TaskListAdapter(
             val importanceText = if (task.markedOnCalendar) "Important" else "Not Important"
             taskImportance.text = "Importance: $importanceText"
             taskDone.isChecked = task.completed
+            val locationText = task.location
+            taskLocation.text = "Location: $locationText"
 
             taskDone.setOnCheckedChangeListener { _, isChecked ->
                 task.completed = isChecked
@@ -114,7 +122,22 @@ class TaskListAdapter(
                 Log.d("TaskViewHolder", "Binding Task: $task")
             }
 
-            deleteThisTask.setOnClickListener {
+            taskLocation.setOnClickListener {
+                if (task.location != "None") {
+                    // Transiciona para o MapFragment, passando a localização como argumento
+                    val mapFragment = MapFragment()  // Assumindo que você tem um MapFragment
+                    val bundle = Bundle().apply {
+                        putString("location", task.location)
+                    }
+                    mapFragment.arguments = bundle
+
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, mapFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+
+                deleteThisTask.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     val updatedTask = task.copy(id = task.id)
                     val success = taskRepository.deleteTask(updatedTask)

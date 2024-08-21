@@ -25,7 +25,6 @@
         android:textSize="18sp"
         android:textColor="@color/textColor_one"
         android:fontFamily="@font/poppins_bold"
-
         android:layout_marginTop="8dp" />
 
     <TextView
@@ -46,6 +45,16 @@
         android:fontFamily="@font/poppins_semibold"
         android:textColor="@color/textColor_one"
         android:layout_below="@id/tvTaskDueDate"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/tvTaskLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Importance"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/textColor_one"
+        android:layout_below="@id/tvTaskImportance"
         android:layout_marginTop="4dp" />
 
     <ImageButton

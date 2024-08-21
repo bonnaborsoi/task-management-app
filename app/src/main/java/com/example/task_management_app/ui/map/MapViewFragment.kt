@@ -18,7 +18,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
 
-class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener {
+class MapViewFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private lateinit var map: GoogleMap
     private var currentMarker: Marker? = null
