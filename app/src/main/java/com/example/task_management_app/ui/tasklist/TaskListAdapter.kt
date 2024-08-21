@@ -13,9 +13,10 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task_management_app.R
+import com.example.task_management_app.data.model.Day
 import com.example.task_management_app.data.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.task_management_app.data.repository.TaskRepositoryImpl
+import com.example.task_management_app.ui.map.MapViewFragment
 import com.google.android.gms.maps.MapFragment
 import java.util.Calendar
 
@@ -31,7 +33,7 @@ class TaskListAdapter(
     private val taskRepository: TaskRepositoryImpl,
     private val onTaskRemoved: (Task) -> Unit,
     private val onTaskEdited: (Task) -> Unit,
-    private val fragmentManager: FragmentManager
+    private val onLocationClicked: (Task) -> Unit
 ) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     private var taskList: MutableList<Task> = mutableListOf()
@@ -39,7 +41,7 @@ class TaskListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
-        return TaskViewHolder(view, taskRepository, onTaskRemoved, onTaskEdited, ::isEditingFun, ::setEditingState, fragmentManager)
+        return TaskViewHolder(view, taskRepository, onTaskRemoved, onTaskEdited, ::isEditingFun, ::setEditingState, onLocationClicked)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
@@ -86,7 +88,7 @@ class TaskListAdapter(
         private val onTaskEdited: (Task) -> Unit,
         private val isEditing: () -> Boolean,
         private val setEditingState: (Boolean) -> Unit,
-        private val fragmentManager: FragmentManager
+        private val onLocationClicked: (Task) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val taskTitle: TextView = itemView.findViewById(R.id.tvTaskTitle)
@@ -123,21 +125,14 @@ class TaskListAdapter(
             }
 
             taskLocation.setOnClickListener {
-                if (task.location != "None") {
-                    // Transiciona para o MapFragment, passando a localização como argumento
-                    val mapFragment = MapFragment()  // Assumindo que você tem um MapFragment
-                    val bundle = Bundle().apply {
-                        putString("location", task.location)
-                    }
-                    mapFragment.arguments = bundle
-
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, mapFragment)
-                        .addToBackStack(null)
-                        .commit()
+                Log.d("taskLocation: ","Clicked")
+                if (task.location != "") {
+                    onLocationClicked(task)
                 }
+            }
 
-                deleteThisTask.setOnClickListener {
+
+            deleteThisTask.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     val updatedTask = task.copy(id = task.id)
                     val success = taskRepository.deleteTask(updatedTask)

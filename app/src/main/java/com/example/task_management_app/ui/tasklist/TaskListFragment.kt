@@ -35,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.util.*
 import com.example.task_management_app.domain.usecase.CreateTask
+import com.example.task_management_app.ui.map.MapViewFragment
 
 class TaskListFragment : Fragment() {
 
@@ -90,6 +91,13 @@ class TaskListFragment : Fragment() {
                 adapter.editTask(task)
                 parentFragmentManager.commit {
                     replace(R.id.fragment_container, TaskListFragment())
+                    addToBackStack(null)
+                }
+            },
+            onLocationClicked = {task ->
+                Log.d("FragmentTask: ","Reached here")
+                parentFragmentManager.commit {
+                    replace(R.id.fragment_container, MapViewFragment())
                     addToBackStack(null)
                 }
             }
