@@ -94,10 +94,12 @@ class TaskListFragment : Fragment() {
                     addToBackStack(null)
                 }
             },
-            onLocationClicked = {task ->
-                Log.d("FragmentTask: ","Reached here")
+            onLocationClicked = { task ->
+                Log.d("FragmentTask: ", "Reached here")
+                val taskId = task.id // Pegue o ID da tarefa
+                val taskLocation = task.location
                 parentFragmentManager.commit {
-                    replace(R.id.fragment_container, MapViewFragment())
+                    replace(R.id.fragment_container, MapViewFragment.newInstance(taskId, taskLocation))
                     addToBackStack(null)
                 }
             }
