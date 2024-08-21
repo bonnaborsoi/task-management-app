@@ -20,25 +20,25 @@ import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var createTask: CreateTask
-    private lateinit var editTask: EditTask
-    private lateinit var deleteTask: DeleteTask
-    private lateinit var dayRepository: CalendarDayRepositoryImpl
+//    private lateinit var createTask: CreateTask
+//    private lateinit var editTask: EditTask
+//    private lateinit var deleteTask: DeleteTask
+//    private lateinit var dayRepository: CalendarDayRepositoryImpl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+//        val firebaseService = FirebaseService()
+//        val calendarDayRepository = CalendarDayRepositoryImpl(firebaseService)
+//        val taskRepository = TaskRepositoryImpl(firebaseService, calendarDayRepository)
+//        createTask = CreateTask(taskRepository)
+//        editTask = EditTask(taskRepository)
+//        deleteTask = DeleteTask(taskRepository)
 
-        val firebaseService = FirebaseService()
-        val calendarDayRepository = CalendarDayRepositoryImpl(firebaseService)
-        val taskRepository = TaskRepositoryImpl(firebaseService, calendarDayRepository)
-        createTask = CreateTask(taskRepository)
-        editTask = EditTask(taskRepository)
-        deleteTask = DeleteTask(taskRepository)
-        
+//        Comeca no TaskListFragment
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
-                replace(R.id.fragment_container, TaskListFragment() /*CalendarFragment()*/)
+                replace(R.id.fragment_container, TaskListFragment())
             }
         }
     }
