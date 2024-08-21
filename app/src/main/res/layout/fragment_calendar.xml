@@ -48,21 +48,23 @@
             android:layout_alignParentEnd="true"
             android:background="@drawable/next_month_icon"/>
     </LinearLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/calendarRecyclerView"
-            android:layout_width="342dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_weight="1" />
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/calendarRecyclerView"
+        android:layout_width="342dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/button_to_task_list"
@@ -74,6 +76,8 @@
         android:textColor="@color/white"
         android:fontFamily="@font/poppins_bold"
         android:text="Go to Tasks View"
+        android:textAllCaps="false"
+        android:layout_gravity="center_horizontal"
         android:background="@drawable/button_border"/>
 
 </LinearLayout>

@@ -26,9 +26,8 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="0dp" />
 
-    <!-- Novo LinearLayout com orientação horizontal -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
@@ -36,42 +35,50 @@
 
         <Spinner
             android:id="@+id/spinnerFilterCompleted"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:textColor="@color/textColor_one"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
             android:fontFamily="@font/poppins_bold"
-            android:background="@null" />
+            />
+
+        <Button
+            android:id="@+id/button_filter"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins_semibold"
+            android:background="@drawable/filter_by_date_icon"/>
 
         <Spinner
             android:id="@+id/spinnerFilterImportant"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:background="@null"
             android:fontFamily="@font/poppins_bold"
-            android:textColor="@color/textColor_one" />
+            android:textColor="@color/textColor_one"
+            android:drawableEnd="@drawable/baseline_arrow_drop_down_24"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button_filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filtrar por Data"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="0dp" />
-
-    <!--  Limpa filtro de data -->
     <Button
         android:id="@+id/button_clear_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Limpar Filtro"
+        android:text="Clear filter by date"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginBottom="0dp"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/poppins_semibold"
+        android:background="@drawable/button_border"
+        android:visibility="gone"/>
 
     <!--    <Button-->
 <!--        android:id="@+id/button_to_calendar"-->

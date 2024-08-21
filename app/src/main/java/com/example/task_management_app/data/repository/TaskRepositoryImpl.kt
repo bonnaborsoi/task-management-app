@@ -70,6 +70,7 @@ class TaskRepositoryImpl(
 
             // Se a task estava marcada no calendário, decrementa o dia correspondente
             if (task?.markedOnCalendar == true) {
+                Log.d("PRINT","EXCLUI TAREFA")
                 calendarDayRepository.decrementDay(task.dueDate)
             }
 
