@@ -21,6 +21,16 @@
         android:clickable="true"
         android:focusable="true" />
 
+    <EditText
+        android:id="@+id/etTaskLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Location"
+        android:textSize="16sp"
+        android:paddingTop="16dp"
+        android:clickable="true"
+        android:focusable="true" />
+
     <CheckBox
         android:id="@+id/cbTaskImportance"
         android:layout_width="wrap_content"

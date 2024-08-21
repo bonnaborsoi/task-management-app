@@ -273,7 +273,8 @@ class TaskListFragment : Fragment() {
             name = "New Task",
             dueDate = startOfDayTimestamp, // Usa o timestamp ajustado
             completed = false,
-            markedOnCalendar = false
+            markedOnCalendar = false,
+            location = "None"
         )
 
         CoroutineScope(Dispatchers.IO).launch {

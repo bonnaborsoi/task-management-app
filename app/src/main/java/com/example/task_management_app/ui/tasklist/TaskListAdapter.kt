@@ -126,7 +126,7 @@ class TaskListAdapter(
 
             taskLocation.setOnClickListener {
                 Log.d("taskLocation: ","Clicked")
-                if (task.location != "") {
+                if (task.location != "None") {
                     onLocationClicked(task)
                 }
             }
@@ -157,10 +157,12 @@ class TaskListAdapter(
                 val cbTaskImportance = dialogView.findViewById<CheckBox>(R.id.cbTaskImportance)
                 val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirm)
                 val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+                val etTaskLocation = dialogView.findViewById<EditText>(R.id.etTaskLocation)
 
                 etTaskName.setText(task.name)
                 tvTaskDate.text = dateFormat.format(task.dueDate)
                 cbTaskImportance.isChecked = task.markedOnCalendar
+                etTaskLocation.setText(task.location)
 
                 tvTaskDate.setOnClickListener {
                     val calendar = Calendar.getInstance()
@@ -188,7 +190,8 @@ class TaskListAdapter(
                     val updatedTask = task.copy(
                         name = etTaskName.text.toString(),
                         dueDate = task.dueDate,
-                        markedOnCalendar = cbTaskImportance.isChecked
+                        markedOnCalendar = cbTaskImportance.isChecked,
+                        location = etTaskLocation.text.toString()
                     )
 
                     CoroutineScope(Dispatchers.IO).launch {

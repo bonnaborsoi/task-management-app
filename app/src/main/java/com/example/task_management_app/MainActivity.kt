@@ -56,7 +56,8 @@ class MainActivity : AppCompatActivity() {
             name = "Lucca",
             dueDate = startOfDayTimestamp, // Usa o timestamp ajustado
             completed = false,
-            markedOnCalendar = true
+            markedOnCalendar = true,
+            location = "no location to be found here"
         )
         // Cria uma nova task e a adiciona ao Firebase
         /*val newTask = Task(

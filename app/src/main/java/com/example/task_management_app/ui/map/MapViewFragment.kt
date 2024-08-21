@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.example.task_management_app.R
 import com.example.task_management_app.data.model.Task
+import com.example.task_management_app.ui.tasklist.TaskListFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -104,12 +106,27 @@ class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickLi
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
                     } else {
                         Log.e("MapViewFragment", "Address not found: $it")
+                        Toast.makeText(context, "Address not found", Toast.LENGTH_SHORT).show()
+                        parentFragmentManager.commit {
+                            replace(R.id.fragment_container, TaskListFragment())
+                            addToBackStack(null)
+                        }
                     }
                 } else {
                     Log.e("MapViewFragment", "Address not found: $it")
+                    Toast.makeText(context, "Address not found", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.commit {
+                        replace(R.id.fragment_container, TaskListFragment())
+                        addToBackStack(null)
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("MapViewFragment", "Geocoding error", e)
+                Toast.makeText(context, "Address not found", Toast.LENGTH_SHORT).show()
+                parentFragmentManager.commit {
+                    replace(R.id.fragment_container, TaskListFragment())
+                    addToBackStack(null)
+                }
             }
         }
     }
