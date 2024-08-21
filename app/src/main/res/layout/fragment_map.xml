@@ -15,16 +15,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!-- Botão para remover o marcador -->
-<!--    <Button-->
-<!--        android:id="@+id/remove_marker_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Remover marcador"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:background="@color/purple_500"-->
-<!--        android:textColor="@android:color/white"/>-->
+    <!-- Botão para voltar pra lista de tarefas -->
+    <Button
+        android:id="@+id/backToTaskList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Tasks View"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="@color/textColor_one"
+        android:fontFamily="@font/poppins_semibold"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"/>
+
 
 </RelativeLayout>

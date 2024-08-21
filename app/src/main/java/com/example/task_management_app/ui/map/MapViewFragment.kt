@@ -8,10 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.task_management_app.R
 import com.example.task_management_app.data.model.Task
+import com.example.task_management_app.databinding.FragmentCalendarBinding
+import com.example.task_management_app.ui.calendar.CalendarFragment
 import com.example.task_management_app.ui.tasklist.TaskListFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -21,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
+import com.example.task_management_app.databinding.FragmentMapBinding
 
 class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickListener*/ {
 
@@ -85,11 +96,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickLi
         val mapFragment = childFragmentManager.findFragmentById(R.id.id_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        /*val removeMarkerButton: Button? = view.findViewById(R.id.remove_marker_button)
-        removeMarkerButton?.setOnClickListener {
-            removeMarker()
-        }*/
+        val backToTaskListButton: Button? = view.findViewById(R.id.backToTaskList)
+        backToTaskListButton?.setOnClickListener {
+            parentFragmentManager.commit {
+                replace(R.id.fragment_container, TaskListFragment())
+                addToBackStack(null)
+            }
+        }
     }
+
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
