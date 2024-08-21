@@ -8,7 +8,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.task_management_app.R
+import com.example.task_management_app.data.firebase.FirebaseService
+import com.example.task_management_app.data.model.Task
+import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
+import com.example.task_management_app.data.repository.TaskRepositoryImpl
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,6 +21,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.*
 
 class MapViewFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickListener {
@@ -23,12 +31,17 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickList
     private lateinit var map: GoogleMap
     private var currentMarker: Marker? = null
     private var selectedLocation: LatLng? = null
+    private lateinit var taskRepository: TaskRepositoryImpl // Repositório de tasks
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate o layout do fragmento
+        taskRepository = TaskRepositoryImpl(
+            FirebaseService(), CalendarDayRepositoryImpl(FirebaseService())
+        )
+
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
 
@@ -55,6 +68,9 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickList
         // Movendo a câmera para um local específico (exemplo)
         val initialLocation = LatLng(-23.5505, -46.6333) // São Paulo, Brasil
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
+
+        // Adiciona marcadores para cada task no mapa
+        addMarkersForTasks()
     }
 
     override fun onMapClick(latLng: LatLng) {
@@ -71,6 +87,24 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapClickList
 
         // Salvar a localização selecionada
         selectedLocation = latLng
+    }
+
+    private fun addMarkersForTasks() {
+        // Executando a coleta das tasks usando coroutines
+        lifecycleScope.launch {
+            taskRepository.getAllTasks().collect { taskList ->
+                taskList.forEach { task ->
+                    val customLatLng = task.latLng // Supondo que task.latLng é do tipo CustomLatLng
+                    val googleLatLng = LatLng(customLatLng.latitude, customLatLng.longitude) // Converte CustomLatLng para LatLng
+
+                    val markerOptions = MarkerOptions()
+                        .title(task.name)
+                        .position(googleLatLng) // Agora usamos o LatLng do Google Maps
+
+                    map.addMarker(markerOptions)
+                }
+            }
+        }
     }
 
     private fun removeMarker() {

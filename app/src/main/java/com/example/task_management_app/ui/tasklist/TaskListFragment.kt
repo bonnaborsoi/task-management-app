@@ -25,6 +25,7 @@ import com.example.task_management_app.R
 import com.example.task_management_app.databinding.FragmentTaskListBinding
 import com.example.task_management_app.domain.usecase.GetAllTasks
 import com.example.task_management_app.data.firebase.FirebaseService
+import com.example.task_management_app.data.model.CustomLatLng
 import com.example.task_management_app.data.model.Task
 import com.example.task_management_app.data.repository.TaskRepositoryImpl
 import com.example.task_management_app.data.repository.CalendarDayRepositoryImpl
@@ -35,6 +36,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.util.*
 import com.example.task_management_app.domain.usecase.CreateTask
+import com.example.task_management_app.ui.map.MapViewFragment
+import com.google.android.gms.maps.model.LatLng
 
 class TaskListFragment : Fragment() {
 
@@ -161,6 +164,11 @@ class TaskListFragment : Fragment() {
                 NavigationButtonToCalendar { navigateToCalendarFragment() }
             }
         }
+        binding.composeViewButtonToCalendar.apply {
+            setContent {
+                NavigationButtonToMaps { navigateToMapsFragment() }
+            }
+        }
         binding.composeAddTaskButton.apply {
             setContent {
                 AddTaskButton { AddTaskFunction() }
@@ -238,6 +246,26 @@ class TaskListFragment : Fragment() {
             addToBackStack(null)
         }
     }
+    @Composable
+    fun NavigationButtonToMaps(onClick: () -> Unit) {
+        Button(
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0xFF071952),
+                contentColor = Color.White
+            ),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(text = "Go to Maps")
+        }
+    }
+
+    private fun navigateToMapsFragment() {
+        parentFragmentManager.commit {
+            replace(R.id.fragment_container, MapViewFragment())
+            addToBackStack(null)
+        }
+    }
 
     @Composable
     fun AddTaskButton(onClick: () -> Unit) {
@@ -263,7 +291,9 @@ class TaskListFragment : Fragment() {
             name = "New Task",
             dueDate = startOfDayTimestamp, // Usa o timestamp ajustado
             completed = false,
-            markedOnCalendar = false
+            markedOnCalendar = false,
+            location = "teste",
+            latLng = CustomLatLng(-8.0891122,-34.8901304)
         )
 
         CoroutineScope(Dispatchers.IO).launch {

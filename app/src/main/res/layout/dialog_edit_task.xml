@@ -27,6 +27,21 @@
         android:layout_height="wrap_content"
         android:text="Important" />
 
+    <EditText
+        android:id="@+id/etLatitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Latitude"
+        android:inputType="numberDecimal|numberSigned" />
+
+    <EditText
+        android:id="@+id/etLongitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Longitude"
+        android:inputType="numberDecimal|numberSigned" />
+
+
     <Button
         android:id="@+id/btnConfirm"
         android:layout_width="match_parent"

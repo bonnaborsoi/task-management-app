@@ -104,6 +104,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp" />
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/composeViewButtonToMaps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp" />
 
         <androidx.compose.ui.platform.ComposeView
             android:id="@+id/composeAddTaskButton"

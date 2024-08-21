@@ -52,12 +52,13 @@ class MainActivity : AppCompatActivity() {
         val currentTimestamp = System.currentTimeMillis()
         val startOfDayTimestamp = getStartOfDay(currentTimestamp) // Ajusta para o início do dia
 
-        val newTask = Task(
-            name = "Lucca",
-            dueDate = startOfDayTimestamp, // Usa o timestamp ajustado
-            completed = false,
-            markedOnCalendar = true
-        )
+//        val newTask = Task(
+//            name = "Lucca",
+//            dueDate = startOfDayTimestamp, // Usa o timestamp ajustado
+//            completed = false,
+//            markedOnCalendar = true
+//
+//        )
         // Cria uma nova task e a adiciona ao Firebase
         /*val newTask = Task(
             id = null,
@@ -67,14 +68,14 @@ class MainActivity : AppCompatActivity() {
             markedOnCalendar = true
         )*/
 
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val taskId = createTask(newTask) // Usando o caso de uso CreateTask
-                Log.d("MainActivity", "Task adicionada com sucesso! ID: $taskId")
-            } catch (e: Exception) {
-                Log.e("MainActivity", "Erro ao adicionar task", e)
-            }
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                val taskId = createTask(newTask) // Usando o caso de uso CreateTask
+//                Log.d("MainActivity", "Task adicionada com sucesso! ID: $taskId")
+//            } catch (e: Exception) {
+//                Log.e("MainActivity", "Erro ao adicionar task", e)
+//            }
+//        }
         /*
         val id_delete : String = "-O4EEax5J_Ppp_3jy2yq"
         CoroutineScope(Dispatchers.IO).launch {

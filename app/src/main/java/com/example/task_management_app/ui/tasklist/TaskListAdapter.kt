@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task_management_app.R
+import com.example.task_management_app.data.model.CustomLatLng
 import com.example.task_management_app.data.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +32,7 @@ class TaskListAdapter(
     private val taskRepository: TaskRepositoryImpl,
     private val onTaskRemoved: (Task) -> Unit,
     private val onTaskEdited: (Task) -> Unit,
-    private val fragmentManager: FragmentManager
+//    private val fragmentManager: FragmentManager
 ) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     private var taskList: MutableList<Task> = mutableListOf()
@@ -39,7 +40,7 @@ class TaskListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
-        return TaskViewHolder(view, taskRepository, onTaskRemoved, onTaskEdited, ::isEditingFun, ::setEditingState, fragmentManager)
+        return TaskViewHolder(view, taskRepository, onTaskRemoved, onTaskEdited, ::isEditingFun, ::setEditingState, /*fragmentManager*/)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
@@ -86,7 +87,7 @@ class TaskListAdapter(
         private val onTaskEdited: (Task) -> Unit,
         private val isEditing: () -> Boolean,
         private val setEditingState: (Boolean) -> Unit,
-        private val fragmentManager: FragmentManager
+//        private val fragmentManager: FragmentManager
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val taskTitle: TextView = itemView.findViewById(R.id.tvTaskTitle)
@@ -96,7 +97,7 @@ class TaskListAdapter(
         private val deleteThisTask: ImageButton = itemView.findViewById(R.id.btnDelete)
         private val editThisTask: ImageButton = itemView.findViewById(R.id.btnEdit)
         private val taskLocation: TextView = itemView.findViewById(R.id.tvTaskLocation)
-
+        private val taskLocationLatLng: TextView = itemView.findViewById(R.id.tvTaskLatLng)
         fun bind(task: Task) {
             taskTitle.text = task.name
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -107,6 +108,8 @@ class TaskListAdapter(
             taskDone.isChecked = task.completed
             val locationText = task.location
             taskLocation.text = "Location: $locationText"
+            val locationLatLngText = task.latLng
+            taskLocationLatLng.text = "Location: $locationLatLngText"
 
             taskDone.setOnCheckedChangeListener { _, isChecked ->
                 task.completed = isChecked
@@ -122,20 +125,20 @@ class TaskListAdapter(
                 Log.d("TaskViewHolder", "Binding Task: $task")
             }
 
-            taskLocation.setOnClickListener {
-                if (task.location != "None") {
-                    // Transiciona para o MapFragment, passando a localização como argumento
-                    val mapFragment = MapFragment()  // Assumindo que você tem um MapFragment
-                    val bundle = Bundle().apply {
-                        putString("location", task.location)
-                    }
-                    mapFragment.arguments = bundle
-
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, mapFragment)
-                        .addToBackStack(null)
-                        .commit()
-                }
+//            taskLocation.setOnClickListener {
+//                if (task.location != "None") {
+//                    // Transiciona para o MapFragment, passando a localização como argumento
+//                    val mapFragment = MapFragment()  // Assumindo que você tem um MapFragment
+//                    val bundle = Bundle().apply {
+//                        putString("location", task.location)
+//                    }
+//                    mapFragment.arguments = bundle
+//
+//                    fragmentManager.beginTransaction()
+//                        .replace(R.id.fragment_container, mapFragment)
+//                        .addToBackStack(null)
+//                        .commit()
+//                }
 
                 deleteThisTask.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
@@ -160,12 +163,16 @@ class TaskListAdapter(
                 val etTaskName = dialogView.findViewById<EditText>(R.id.etTaskName)
                 val tvTaskDate = dialogView.findViewById<TextView>(R.id.tvTaskDate)
                 val cbTaskImportance = dialogView.findViewById<CheckBox>(R.id.cbTaskImportance)
+                val etLatitude = dialogView.findViewById<EditText>(R.id.etLatitude)
+                val etLongitude = dialogView.findViewById<EditText>(R.id.etLongitude)
                 val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirm)
                 val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
 
                 etTaskName.setText(task.name)
                 tvTaskDate.text = dateFormat.format(task.dueDate)
                 cbTaskImportance.isChecked = task.markedOnCalendar
+                etLatitude.setText(task.latLng.latitude.toString())
+                etLongitude.setText(task.latLng.longitude.toString())
 
                 tvTaskDate.setOnClickListener {
                     val calendar = Calendar.getInstance()
@@ -190,10 +197,22 @@ class TaskListAdapter(
                     .create()
 
                 btnConfirm.setOnClickListener {
+                    // Validação e conversão dos valores de latitude e longitude
+                    val latitude = etLatitude.text.toString().toDoubleOrNull()
+                    val longitude = etLongitude.text.toString().toDoubleOrNull()
+
+                    if (latitude == null || longitude == null) {
+                        Toast.makeText(itemView.context, "Invalid latitude or longitude", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
+                    val updatedLatLng = CustomLatLng(latitude, longitude)
+
                     val updatedTask = task.copy(
                         name = etTaskName.text.toString(),
                         dueDate = task.dueDate,
-                        markedOnCalendar = cbTaskImportance.isChecked
+                        markedOnCalendar = cbTaskImportance.isChecked,
+                        latLng = updatedLatLng
                     )
 
                     CoroutineScope(Dispatchers.IO).launch {
@@ -218,6 +237,7 @@ class TaskListAdapter(
 
                 alertDialog.show()
             }
+
         }
     }
 }

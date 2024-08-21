@@ -51,11 +51,21 @@
         android:id="@+id/tvTaskLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Importance"
+        android:text="Location"
         android:fontFamily="@font/poppins_semibold"
         android:textColor="@color/textColor_one"
         android:layout_below="@id/tvTaskImportance"
         android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/tvTaskLatLng"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTaskImportance"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="LocationLatLng"
+        android:textColor="@color/textColor_one" />
 
     <ImageButton
         android:id="@+id/btnDelete"

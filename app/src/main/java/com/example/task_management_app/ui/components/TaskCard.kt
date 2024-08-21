@@ -22,8 +22,8 @@ fun TaskCard(task: Task, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
-@Composable
-fun TaskCardPreview() {
-    TaskCard(task = Task("1", "Tarefa Teste", System.currentTimeMillis(), false, true))
-}
+//@Preview
+//@Composable
+//fun TaskCardPreview() {
+//    TaskCard(task = Task("1", "Tarefa Teste", System.currentTimeMillis(), false, true))
+//}
