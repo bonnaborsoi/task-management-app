@@ -49,7 +49,6 @@
             android:background="@drawable/next_month_icon"/>
     </LinearLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/calendarRecyclerView"
         android:layout_width="342dp"

@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 class GetTasksByDate(private val taskRepository: TaskRepository) {
     operator fun invoke(date: Long): Flow<List<Task>> {
-        // Adiciona lógica de negócios específica aqui, se necessário
         return taskRepository.getTasksByDate(date)
     }
 }

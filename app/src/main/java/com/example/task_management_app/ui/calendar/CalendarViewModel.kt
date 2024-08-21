@@ -39,19 +39,16 @@ class CalendarViewModel(
     private fun generateMonthDays(currentDate: Long, highlightedDays: List<Day>): List<Day> {
         val calendar = Calendar.getInstance().apply { timeInMillis = currentDate }
 
-        // Encontre o dia 1 do mês atual e a posição dele na semana
         calendar.set(Calendar.DAY_OF_MONTH, 1)
         val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
         val monthDays = mutableListOf<Day>()
 
-        // Preencher os dias "vazios" antes do dia 1
         for (i in 0 until firstDayOfWeek) {
             monthDays.add(Day(date = 0L, quantity = -1))
         }
 
-        // Preencher os dias do mês
         for (dayOfMonth in 1..daysInMonth) {
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             val dayInMillis = calendar.timeInMillis
@@ -60,15 +57,13 @@ class CalendarViewModel(
                 ?: Day(date = dayInMillis, quantity = 0)
             monthDays.add(day)
         }
-
-        // Preencher os dias "vazios" após o último dia do mês
         while (monthDays.size % 7 != 0) {
             monthDays.add(Day(date = 0L, quantity = -1))
         }
 
         return monthDays
     }
-    // Novo método para formatar o mês e ano
+
     val currentMonthName: StateFlow<String> = currentDate.map { dateInMillis ->
         val calendar = Calendar.getInstance().apply { timeInMillis = dateInMillis }
         val monthFormat = java.text.SimpleDateFormat("MMMM yyyy", Locale.getDefault())

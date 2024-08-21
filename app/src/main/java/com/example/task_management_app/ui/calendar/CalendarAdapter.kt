@@ -18,7 +18,7 @@ import java.util.*
 
 class CalendarAdapter(
     private val onDayClicked: (Day) -> Unit,
-    private val calendarDayRepository: CalendarDayRepositoryImpl // Adicione este parâmetro para acessar o repositório
+    private val calendarDayRepository: CalendarDayRepositoryImpl
 ) : RecyclerView.Adapter<CalendarAdapter.DayViewHolder>() {
 
     private var dayList: List<Day> = emptyList()
@@ -31,7 +31,7 @@ class CalendarAdapter(
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
         val day = dayList.getOrNull(position)
-        holder.bind(day, onDayClicked, calendarDayRepository) // Passe o calendarDayRepository para o ViewHolder
+        holder.bind(day, onDayClicked, calendarDayRepository)
     }
 
     override fun getItemCount(): Int = dayList.size

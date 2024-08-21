@@ -8,7 +8,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Fragmento do mapa -->
     <fragment
         android:id="@+id/id_map"
         class="com.google.android.gms.maps.SupportMapFragment"
@@ -28,6 +27,5 @@
         android:fontFamily="@font/poppins_semibold"
         android:textAllCaps="false"
         android:textColor="@android:color/white"/>
-
 
 </RelativeLayout>

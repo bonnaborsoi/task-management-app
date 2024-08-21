@@ -96,7 +96,7 @@ class TaskListFragment : Fragment() {
             },
             onLocationClicked = { task ->
                 Log.d("FragmentTask: ", "Reached here")
-                val taskId = task.id // Pegue o ID da tarefa
+                val taskId = task.id
                 val taskLocation = task.location
                 parentFragmentManager.commit {
                     replace(R.id.fragment_container, MapViewFragment.newInstance(taskId, taskLocation))

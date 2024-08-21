@@ -20,7 +20,6 @@ class TaskListViewModel(
                 Log.d("TaskListViewModel", "Filtering tasks for date: $date")
                 getAllTasks().map { tasks ->
                     tasks.filter { task ->
-                        // Ajuste a comparação para ignorar horas
                         val taskDate = Calendar.getInstance().apply { timeInMillis = task.dueDate }
                         val filterDate = Calendar.getInstance().apply { timeInMillis = date }
 

@@ -54,7 +54,6 @@ class CalendarFragment : Fragment() {
         val adapter = CalendarAdapter(
             onDayClicked = { day ->
                 //if (day.quantity != -1){
-                    // Crie uma instância de TaskListFragment com a data selecionada como argumento
                     val taskListFragment = TaskListFragment().apply {
                         arguments = Bundle().apply {
                             putLong("selectedDate", day.date)

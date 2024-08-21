@@ -60,7 +60,6 @@ class CalendarDayRepositoryImpl(
             false
         }
     }
-    // Adicione o método getDayQuantity aqui
     suspend fun getDayQuantity(date: Long): Int? {
         return try {
             val startOfDay = getStartOfDay(date)

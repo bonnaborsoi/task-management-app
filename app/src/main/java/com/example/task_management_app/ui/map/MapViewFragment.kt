@@ -19,9 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.task_management_app.R
-import com.example.task_management_app.data.model.Task
-import com.example.task_management_app.databinding.FragmentCalendarBinding
-import com.example.task_management_app.ui.calendar.CalendarFragment
 import com.example.task_management_app.ui.tasklist.TaskListFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -31,7 +28,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
-import com.example.task_management_app.databinding.FragmentMapBinding
 
 class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickListener*/ {
 
@@ -69,7 +65,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickLi
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate o layout do fragmento
         return inflater.inflate(R.layout.fragment_map, container, false)
     }*/
 
@@ -78,7 +73,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickLi
         arguments?.let {
             taskId = it.getString(ARG_TASK_ID)
             taskLocation = it.getString(ARG_TASK_LOCATION)
-            // Use the taskId to retrieve the Task from your data source
         }
     }
 
@@ -86,7 +80,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickLi
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
 
@@ -146,33 +139,25 @@ class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickLi
         }
     }
 
-//        // Define o listener para cliques no mapa
 //        map.setOnMapClickListener(this)
-//
-//        // Movendo a câmera para um local específico (exemplo)
+
 //        val initialLocation = LatLng(-23.5505, -46.6333) // São Paulo, Brasil
 //        map.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
 //    }
 //
 //    override fun onMapClick(latLng: LatLng) {
 //        Log.d("onMap","$taskId")
-//        // Remover o marcador atual, se existir
 //        currentMarker?.remove()
-//
-//        // Adicionar um novo marcador no local clicado
+
 //        val markerTitle = getLocationName(latLng) ?: "Local Selecionado"
 //        val markerOptions = MarkerOptions().position(latLng).title(markerTitle)
 //        currentMarker = map.addMarker(markerOptions)
 //
-//        // Movendo a câmera para o local clicado
 //        map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-//
-//        // Salvar a localização selecionada
 //        selectedLocation = latLng
 //    }
 //
 //    private fun removeMarker() {
-//        // Remover o marcador atual, se existir
 //        currentMarker?.remove()
 //        currentMarker = null
 //        selectedLocation = null
@@ -180,7 +165,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickLi
 //    }
 //
 //    private fun getLocationName(latLng: LatLng): String? {
-//        // Verifique se o contexto não é nulo
 //        val context = context ?: return null
 //        val geocoder = Geocoder(context, Locale.getDefault())
 //
@@ -197,7 +181,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback/*, GoogleMap.OnMapClickLi
 //        }
 //    }
 //
-//    // Função para recuperar a localização selecionada
 //    fun getSelectedLocation(): LatLng? {
 //        return selectedLocation
 //    }

@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 class GetAllTasks(private val taskRepository: TaskRepository) {
     operator fun invoke(): Flow<List<Task>> {
-        // Adiciona lógica de negócios específica aqui, se necessário
         return taskRepository.getAllTasks()
     }
 }
